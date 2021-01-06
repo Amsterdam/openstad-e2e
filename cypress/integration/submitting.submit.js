@@ -10,7 +10,7 @@ describe('Plan insturen', () => {
   it('Stuur een nieuw plan in', () => {
 
     // goto site
-    cy.visit(Cypress.env('siteUrl'))
+    cy.visit(Cypress.env('submittingSiteUrl'))
 
     // check flassh message
     cy.contains('Plannen')

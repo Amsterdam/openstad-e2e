@@ -4,7 +4,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
   return false
 })
 
-describe('Anoniem liken', () => {
+describe('Anonymous liking', () => {
 
   it('Ga naar plan en klik op like', () => {
     // goto site
