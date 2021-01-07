@@ -23,3 +23,60 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+
+// cypress/support/commands.js
+const { MailSlurp } = require("mailslurp-client");
+
+Cypress.Commands.add("waitForLatestEmail", (inboxId) => {
+  const mailslurp = new MailSlurp({ apiKey: Cypress.env("mailSlurpApiKey") });
+  return mailslurp.waitForLatestEmail(inboxId);
+});
+
+Cypress.Commands.add("login", (authUrl, emailAddress, inboxId) => {
+  // directly go to login url
+  // /login redirects to auth server
+  cy.visit(authUrl);
+
+  // email
+  cy.get('input.form-input')
+    .type(emailAddress)
+
+  // oauth submit
+  cy.get('.btn.btn-primary')
+    .click()
+
+  return cy.waitForLatestEmail(inboxId).then((receivedEmail) => {
+    console.log('receivedEmail', receivedEmail);
+
+    // add http/s? Test only works with https urls, not local http urls, fine for now
+    var urlExpression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+
+    // extract the login url (so we can confirm the user)
+    url = urlExpression.exec(receivedEmail.body)[1];
+
+    return cy.visit(url);
+    // { subject: '...', body: '...' }
+  });
+});
+
+Cypress.Commands.add("loginUser", (url, email) => {
+  // directly go to login url
+  // /login redirects to auth server
+  url = url + '/login';
+  return cy.login(url, Cypress.env("defaultUserEmail"), Cypress.env("defaultUserMailSlurpInboxId"));
+});
+
+Cypress.Commands.add("loginModerator", (url, email) => {
+  // directly go to login url
+  // admin url always allows e-mail authentication
+  cy.visit(url + '/admin/login')
+  return cy.login(url, Cypress.env("moderatorUserEmail"), Cypress.env("moderatorUserMailSlurpInboxId"));
+});
+
+Cypress.Commands.add("loginAdmin", (url, email) => {
+  // directly go to login url
+  // /login redirects to auth server
+  cy.visit(url + '/admin/login')
+  return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"));
+});

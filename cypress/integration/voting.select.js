@@ -6,9 +6,29 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('Voting on an idea', () => {
 
-  it('Go to voting site and select a plan', () => {
+  it('Select a plan', () => {
 
     // goto site
     cy.visit(Cypress.env('votingSiteUrl'));
-  })
+
+    .should()
+  });
+
+  it('Go the next step', () => {
+
+    // goto site
+    cy.visit(Cypress.env('votingSiteUrl'));
+
+    .should()
+  });
+
+  it('Authenticate with email', () => {
+
+    // goto site
+    cy.visit(Cypress.env('votingSiteUrl'));
+
+    .should()
+  });
+
+
 })

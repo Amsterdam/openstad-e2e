@@ -5,7 +5,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
   return false;
 })
 
-describe('Submitting rendering ideas', () => {
+describe('Overview voting on ideas', () => {
 
   it('Overview should have more then one submitted idea', () => {
     // goto site
@@ -30,6 +30,10 @@ describe('Submitting rendering ideas', () => {
   });
 
   it('Filter on area', () => {
+
+  });
+
+  it('Navigating with keyboard', () => {
 
   });
 

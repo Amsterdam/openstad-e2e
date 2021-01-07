@@ -7,7 +7,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('Budgeting selecting ideas', () => {
 
-  it('Addding and removing button should work', () => {
+  it('Adding and removing button', () => {
     // goto site
     cy.visit(Cypress.env('budgettingSiteUrl'))
 
@@ -27,6 +27,31 @@ describe('Budgeting selecting ideas', () => {
 
     cy.get('.button-add-idea-to-budget')
       .should('not.have.class','added')
+  });
+
+  it('Minimum amount not reached next step not allowed', () => {
+    //click it again, this should remove added class
+     cy.get('.button-add-idea-to-budget')
+       .first().click();
+  });
+
+  it('Removing an idea in top', () => {
+    //click it again, this should remove added class
+     cy.get('.button-add-idea-to-budget')
+       .first().click();
+  });
+
+  it('Navigating with Keyboard', () => {
+    //click it again, this should remove added class
+     cy.get('.button-add-idea-to-budget')
+       .first().click();
+
+  });
+
+  it('Minimum reached next step allowed', () => {
+    //click it again, this should remove added class
+     cy.get('.button-add-idea-to-budget')
+       .first().click();
 
   });
 
