@@ -17,36 +17,26 @@ const getDefaultSiteFields = () => {
     name: 'domain',
     type: 'text',
     validInput: 'test-site-' + new DateTime().getTime()
-  }]
+  }
+  {
+    name: 'fromEmail',
+    type: 'text',
+    validInput: Cypress.env('senderEmail')
+  }
+  {
+    name: 'fromName',
+    type: 'text',
+    validInput: Cypress.env('senderName')
+  }
+]
 };
 
 const copySiteFields = [
   {
-
-  }
-];
-
-const createSubmitSiteFields = [
-  {
-
-  }
-];
-
-const createBudgettingSiteFields = [
-  {
-
-  }
-];
-
-const createEmptySiteFields = [
-  {
-
-  }
-];
-
-const createVoteSiteFields = [
-  {
-
+    name: 'siteIdToCopy',
+    type: 'select',
+    // plannen insturen site
+    validInput: 221
   }
 ];
 
@@ -87,7 +77,7 @@ const navigateToSiteCreatePage = () => {
   cy.visit(Cypress.env('adminUrl'));
 
   // go to voting page
-  cy.get('.btn').contains('Nieuw');
+  cy.get('.btn').contains('Maak nieuwe site aan');
     .click();
 }
 
@@ -104,7 +94,7 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     cy.visit(Cypress.env('adminUrl'));
 
     // go to voting page
-    cy.get('.btn').contains('Kopieer');
+    cy.get('.btn').contains('Kopieer site');
       .click();
 
     fillInForm([...siteFields, ...copySiteFields], cy);
@@ -125,7 +115,10 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
   it('Create a new budgetting site', () => {
     navigateToSiteCreatePage(cy)
 
-    fillInForm([...getDefaultSiteFields(), ...createBudgettingSiteFields], cy);
+    fillInForm(getDefaultSiteFields(), cy);
+
+    cy.contains('Participatief begroten')
+      .click();
 
     submitForm(cy);
 
@@ -143,7 +136,10 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     navigateToSiteCreatePage(cy);
 
     //fill in form
-    fillInForm([...getDefaultSiteFields(), ...createSubmitSiteFields], cy);
+    fillInForm(getDefaultSiteFields(), cy);
+
+    cy.contains('Plannen insturen')
+      .click();
 
     checkIfSiteCreationIsSuccesfull();
 
@@ -159,7 +155,10 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     navigateToSiteCreatePage(cy);
 
     //fill in form
-    fillInForm([...getDefaultSiteFields(), ...createVoteSiteFields], cy);
+    fillInForm(getDefaultSiteFields(), cy);
+
+    cy.contains('Stemsite')
+      .click();
 
     checkIfSiteCreationIsSuccesfull();
 
@@ -175,7 +174,10 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     navigateToSiteCreatePage(cy);
 
     //fill in form
-    fillInForm([...getDefaultSiteFields(), ...createEmptySiteFields], cy);
+    fillInForm(getDefaultSiteFields(), cy);
+
+    cy.contains('Lege site')
+      .click();
 
     submitForm(cy);
 
@@ -189,6 +191,7 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     }
   });
 
+/*
   it('Import a new empty site', () => {
     cy.visit(Cypress.env('adminUrl'));
 
@@ -209,6 +212,7 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
       createdSites.push(siteId);
     }
   });
+  */
 
   it('Edit basic auth of first created site', () => {
     // assume first site exists

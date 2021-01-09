@@ -31,7 +31,8 @@ describe('Budgeting selecting ideas', () => {
       .should('be.gte', 0)
 
     cy.get('#next-button')
-      .click()
+      .click();
+      
   });
 
 })
