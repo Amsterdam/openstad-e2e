@@ -8,7 +8,6 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 const createdSites = [];
 
 const getDefaultSiteFields = () => {
-
   return [{
     name: 'siteName',
     type: 'text',
@@ -232,10 +231,13 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
       .first()
       .value()
 
-    // login with basicauth
-    cy.visit(siteUrl);
-
-    cy.request().should('have.status', 200);
+    // visit site, throws error if basic auth is false
+    cy.visit(siteUrl, {
+      auth: {
+        username: newUser,
+        password: newPassword
+      }
+    });
   });
 
 
@@ -249,8 +251,8 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
         .contains('verwijder')
         click();
 
-      //
-
+      // same ure should now give a 404
+      cy.visit(deleteUrl);
     });
   })
 

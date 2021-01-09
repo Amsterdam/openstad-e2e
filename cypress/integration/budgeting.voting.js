@@ -16,7 +16,8 @@ describe('Budgeting selecting ideas', () => {
       .click()
 
     cy.get('.button-add-idea-to-budget')
-      .first().click()
+      .first()
+      .click()
 
     cy.get('#next-button')
       .click()
@@ -29,6 +30,8 @@ describe('Budgeting selecting ideas', () => {
       .its('length')
       .should('be.gte', 0)
 
+    cy.get('#next-button')
+      .click()
   });
 
 })

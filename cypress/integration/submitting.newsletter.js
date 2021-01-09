@@ -9,25 +9,12 @@ describe('Budgeting selecting ideas', () => {
 
   it('Overview should be shown in second step', () => {
     // goto site
-    cy.visit(Cypress.env('budgettingSiteUrl'))
+    cy.visit(Cypress.env('submittingSiteUrl'))
 
-    // go to voting page
-    cy.get('.nav-link').contains('Stemmen')
-      .click()
+    // go to newsletter
+    cy.get('a').contains('Hou mij op de hoogte')
+      .click();
 
-    cy.get('.button-add-idea-to-budget')
-      .first().click()
-
-    cy.get('#next-button')
-      .click()
-
-    cy.screenshot();
-
-    //second step, see if overview of selected step is correctly rendered
-    cy.get('.overview')
-      .find('tr')
-      .its('length')
-      .should('be.gte', 0)
 
   });
 

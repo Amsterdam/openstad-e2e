@@ -1,3 +1,7 @@
+/**
+ * Testing default overview of submitted plans
+ * @Todo many details: combined selections, tags, exclude/include, second areas, progressbar, status
+ */
 Cypress.on('uncaught:exception', (err, runnable) => {
   // returning false here prevents Cypress from
   // failing the test
@@ -21,19 +25,22 @@ describe('Overview voting on ideas', () => {
       .should('be.gte', 1)
   });
 
-  it('Sorting on created date', () => {
+  it('Navigating with keyboard between ideas', () => {
+    // open first item
+    cy.get('.gridder-show .this-idea-id')
+      .then(($ideaId) => {
+        // store the button's text
+        return $ideaId.text();
+      })
+      .then((ideaId) => {
+        // Navigating to next idea
+        cy.get('body')
+        .type('{rightarrow}')
 
-  });
-
-  it('Filter on theme', () => {
-
-  });
-
-  it('Filter on area', () => {
-
-  });
-
-  it('Navigating with keyboard', () => {
+        cy.get('.gridder-show .this-idea-id')
+          .should('not.be.empty')
+          .should('not.eq', ideaId)
+      })
 
   });
 

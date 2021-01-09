@@ -32,7 +32,8 @@ describe('Budgeting selecting ideas', () => {
   it('Minimum amount not reached next step not allowed', () => {
     //click it again, this should remove added class
      cy.get('.button-add-idea-to-budget')
-       .first().click();
+       .first()
+       .click();
   });
 
   it('Removing an idea in top', () => {

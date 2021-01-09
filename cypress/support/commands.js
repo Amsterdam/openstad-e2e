@@ -60,7 +60,7 @@ Cypress.Commands.add("login", (authUrl, emailAddress, inboxId) => {
   });
 });
 
-Cypress.Commands.add("loginUser", (url, email) => {
+Cypress.Commands.add("loginUser", (url) => {
   // directly go to login url
   // /login redirects to auth server
   url = url + '/login';

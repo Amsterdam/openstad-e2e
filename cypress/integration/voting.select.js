@@ -6,29 +6,68 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('Voting on an idea', () => {
 
-  it('Select a plan', () => {
+  it('Click and open an idea', () => {
+      // goto site
+      cy.visit(Cypress.env('votingSiteUrl'));
 
-    // goto site
-    cy.visit(Cypress.env('votingSiteUrl'));
-
-    .should()
+      //
+      cy.get('.tile.idea-item.list-item')
+        .first()
+        .click()
   });
 
-  it('Go the next step', () => {
-
-    // goto site
-    cy.visit(Cypress.env('votingSiteUrl'));
-
-    .should()
+  it('Select an idea by clicking on the voting button', () => {
+    //@todo fetch IdeaId and check later on if correct idea is voted on
+    //
+      // by opening an idea, the vote button should be visible now, and click it
+      cy.get('.vote-button')
+        .contains('stem', {matchCase: false})
+        .should('be.visible')
+        .click();
   });
 
-  it('Authenticate with email', () => {
+  it('Go the next step of voting', () => {
+    // ideaId should be set
+    cy.get('[name="ideaId"]')
+      .invoke('val')
+      .should('not.be.empty')
 
-    // goto site
-    cy.visit(Cypress.env('votingSiteUrl'));
-
-    .should()
+    cy.get('#next-button')
+      .click();
   });
 
+  it('Click on verify email', () => {
+    // goto site
+    cy.contains('e-mailadres', {matchCase: false})
+      .should('be.visible')
+      .click();
 
+      // email
+    cy.get('input.form-input')
+      .type()
+
+    // fetch url, and use default user login logic
+    cy.url().then(url => {
+      cy.loginUser(url);
+    });
+  });
+
+  // in most case we are reusing the e-mail adress, so only first time
+  // @todo create dynamic email address to vote
+  // it's posisble with mailslurp, but too many runs per month will push up the costs per month
+  it('Verify vote', () => {
+    // Make sure the validated message is visible
+    // In some  bugs a redirect after e-mail verificatioon doesn't redirect back directly to the
+    // voting finish button
+    cy.contains('Gevalideerd', {matchCase: false})
+      .should('be.visible')
+
+    // click to send vote
+    cy.get('#next-button')
+      .click();
+
+    // Gelukt
+    cy.contains('Gelukt', {matchCase: false})
+      .should('be.visible');
+  });
 })
