@@ -81,6 +81,14 @@ Cypress.Commands.add("loginAdmin", (url, email) => {
   return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"));
 });
 
+Cypress.Commands.add("loginAdminPanel", (url, email) => {
+  // directly go to login url
+  // /login redirects to auth server
+  cy.visit(Cypress.env('adminUrl') + '/admin/oauth/login')
+  return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"));
+});
+
+
 Cypress.Commands.add(
   'dropFile',
   {
@@ -106,3 +114,15 @@ Cypress.Commands.add(
       });
   }
 );
+
+Cypress.Commands.add("selectNth", (select, pos) => {
+  cy.get(`${select} option +option`)
+    .eq(pos)
+    .then( e => {
+      cy.log(select);
+      cy.log(e.val());
+
+       cy.get(select)
+         .select(e.val())
+    })
+})

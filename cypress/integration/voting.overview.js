@@ -13,7 +13,7 @@ describe('Overview voting on ideas', () => {
 
   it('Overview should have more then one submitted idea', () => {
     // goto site
-    cy.visit(Cypress.env('submittingSiteUrl'))
+    cy.visit(Cypress.env('votingSiteUrl'))
 
     // go to voting page
     cy.get('.nav-link').contains('Plannen')

@@ -11,7 +11,7 @@ describe('Voting on an idea', () => {
       cy.visit(Cypress.env('votingSiteUrl'));
 
       //
-      cy.get('.tile.idea-item.list-item')
+      cy.get('#ideaList .idea-item')
         .first()
         .click()
   });
@@ -38,13 +38,13 @@ describe('Voting on an idea', () => {
 
   it('Click on verify email', () => {
     // goto site
-    cy.contains('e-mailadres', {matchCase: false})
+    cy.get('.validate-auth-button').contains('e-mailadres', {matchCase: false})
       .should('be.visible')
       .click();
 
       // email
     cy.get('input.form-input')
-      .type()
+      .type(Cypress.env("defaultUserEmail"))
 
     // fetch url, and use default user login logic
     cy.url().then(url => {

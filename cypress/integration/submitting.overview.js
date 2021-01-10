@@ -27,9 +27,7 @@ describe('Submitting rendering ideas', () => {
 
   it('Filter on theme', () => {
 
-    cy.get('select[name="theme"] options')
-      .eq(1)
-      .select()
+    cy.selectNth('select[name="theme"]', 0)
       .invoke('val')
       .then(selectedTheme => {
         cy.log('Selected theme: ', selectedTheme);
@@ -43,19 +41,19 @@ describe('Submitting rendering ideas', () => {
           });
       });
 
+      cy.wait(2000)
+
+
     // reset theme selection
-    cy.get('select[name="theme"] options')
-      .invoke('val', '')
+    cy.get('select[name="theme"]')
+      .select('')
   });
 
   it('Filter on area', () => {
     // Select first area
-    cy.get('select[name="area"] options')
-      .eq(1)
-      .select()
+    cy.selectNth('select[name="area"]', 0)
       .invoke('val')
       .then(selectedArea => {
-        const selectedArea = selectedArea;
         cy.log('Selected area: ', selectedArea);
 
         //@todo add data-area
@@ -68,7 +66,7 @@ describe('Submitting rendering ideas', () => {
       });
 
     // reset area selection
-    cy.get('select[name="area"] options')
+    cy.get('select[name="area"]')
       .invoke('val', '')
   });
 

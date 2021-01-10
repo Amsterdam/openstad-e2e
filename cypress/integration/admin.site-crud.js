@@ -17,12 +17,12 @@ const getDefaultSiteFields = () => {
     name: 'domain',
     type: 'text',
     validInput: 'test-site-' + new DateTime().getTime()
-  }
+  },
   {
     name: 'fromEmail',
     type: 'text',
     validInput: Cypress.env('senderEmail')
-  }
+  },
   {
     name: 'fromName',
     type: 'text',
@@ -77,7 +77,7 @@ const navigateToSiteCreatePage = () => {
   cy.visit(Cypress.env('adminUrl'));
 
   // go to voting page
-  cy.get('.btn').contains('Maak nieuwe site aan');
+  cy.get('.btn').contains('Maak nieuwe site aan')
     .click();
 }
 
@@ -94,7 +94,7 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     cy.visit(Cypress.env('adminUrl'));
 
     // go to voting page
-    cy.get('.btn').contains('Kopieer site');
+    cy.get('.btn').contains('Kopieer site')
       .click();
 
     fillInForm([...siteFields, ...copySiteFields], cy);
@@ -231,17 +231,19 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     cy.get('[name=basicAuthUser]').
 
     // get the site url
-    const siteUrl = cy.get('[name=productionUrl]')
+    cy.get('[name=productionUrl]')
       .first()
-      .value()
+      .invoke('val')
+      .then((siteUrl) => {
+        // visit site, throws error if basic auth is false
+        cy.visit(siteUrl, {
+          auth: {
+            username: newUser,
+            password: newPassword
+          }
+        });
+      })
 
-    // visit site, throws error if basic auth is false
-    cy.visit(siteUrl, {
-      auth: {
-        username: newUser,
-        password: newPassword
-      }
-    });
   });
 
 
