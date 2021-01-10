@@ -11,20 +11,41 @@ const formFields = [
     name: 'title',
     type: 'text',
     invalidInput: 'Too short',
-    validInput: 'This is the correct length'
+    validInput: 'I am a title of an idea'
   },
   {
     title: 'Title',
     name: 'summary',
     type: 'text',
     invalidInput: 'Too short',
-    validInput: 'This is the correct length'
+    validInput: 'I am a summary of an idea'
   },
   {
     name: 'description',
     type: 'text',
-    invalidInput: 'Too short',
-    validInput: 'This is the correct length'
+    // don't validate for now
+    invalidInput: null,
+    validInput: 'This should be the correct length of a description, fully, without joking, and other things, I\'m fully 100% correct and long enough so that the website allows me to submit an idea.'
+  },
+  {
+    name: 'extraData[theme]',
+    type: 'text',
+    // empty input should give an error
+    invalidInput: '',
+    validInput: 'Groen en Duurzaam'
+  },
+  {
+    name: 'extraData[area]',
+    type: 'text',
+    // empty input should give an error
+    invalidInput: '',
+    validInput: 'Buurt 1'
+  },
+  {
+    name: 'extraData[phone]',
+    type: 'text',
+    invalidInput: '06',
+    validInput: '0612341234'
   },
 ];
 
@@ -54,75 +75,59 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
       .click()
   });
 
-  /**
-   * Generic test listed fields
-   */
-  formFields.forEach((field, i) => {
-    it('Can fill in ' + field.title, () => {
+  it('Filling, validating and submitting the form', () => {
+
+    // test validation
+    formFields.forEach((field, i) => {
+      // go to first page
+      if (field.invalidInput === null) {
+        fillInField(field.name, field.invalidInput, field.type, cy);
+      }
+    });
+
+    cy.get('.resource-form [type="submit"]')
+      .click()
+
+    formFields.forEach((field, i) => {
+      // go to first page
+      if (field.invalidInput) {
+        // in most cases next is label with error
+        // in some special cases, mainly checkbox it's different
+        // @todo add these later
+        cy.get(`[name="${field.name}"]`)
+          .next()
+          .should()
+      }
+    });
+
+
+    /**
+     * Test interactions and uploading of image
+     cy.get(fileUploader).trigger('dragenter');
+     cy.dropFile(imagePath);
+    */
+
+    /**
+     * Fill in listed fields with correct values
+     */
+    formFields.forEach((field, i) => {
       // go to first page
       fillInField(field.name,  field.validInput, field.type, cy);
     });
+
+    // add location click
+    // @todo add more interaction tests
+    cy.get('#map')
+      .click();
+
+    cy.get('.resource-form [type="submit"]')
+      .click()
   });
 
-  /**
-   * Test interactions and uploading of image
-   */
-  it('Can upload image by clicking', () => {
+
+  it('Fields are visible after submitting', () => {
     // go to first page
 
-  });
-
-  it('Can remove image by clicking', () => {
-    // go to first page
-
-  });
-
-  it('Can upload image by dragging', () => {
-    // go to first page
-
-  });
-
-  it('Can remove image again', () => {
-    // go to first page
-  });
-
-  it('Can upload a bigger image of 5mb', () => {
-    // go to first pag
-  });
-
-  // test validation
-  formFields.forEach((field, i) => {
-    it('Valdidation should give error for ' + field.title, () => {
-      // go to first page
-      fillInField(field.name, field.type, field.value);
-    });
-  });
-
-  // test validation
-  formFields.forEach((field, i) => {
-    it('Valdidation should give error for ' + field.title, () => {
-      // go to first page
-      fillInField(field.name, field.type, field.value);
-    });
-  });
-
-  it('Can submit idea', () => {
-    // fill in correct fields
-    formFields.forEach((field, i) => {
-
-    });
-
-    // expect to go to new page
-  });
-
-  formFields.forEach((field, i) => {
-    it('Field '+ field.title +' is visible on idea page' , () => {
-
-    })
-  });
-
-  it('Image is visible on idea page', () => {
-    // go to first page
   });
 
 

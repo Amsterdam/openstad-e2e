@@ -39,20 +39,23 @@ describe('Budgeting selecting ideas', () => {
   it('Removing an idea in top', () => {
     //click it again, this should remove added class
      cy.get('.button-add-idea-to-budget')
-       .first().click();
+       .first()
+       .click();
   });
 
   it('Navigating with Keyboard', () => {
     //click it again, this should remove added class
      cy.get('.button-add-idea-to-budget')
-       .first().click();
+       .first()
+       .click();
 
   });
 
   it('Minimum reached next step allowed', () => {
     //click it again, this should remove added class
      cy.get('.button-add-idea-to-budget')
-       .first().click();
+       .first()
+       .click();
 
   });
 

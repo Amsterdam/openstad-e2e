@@ -16,11 +16,13 @@ describe('Anonymous liking', () => {
 
     // click on the first plan
     cy.get('.tile.idea-item.list-item')
-      .first().click()
+      .first()
+      .click()
 
     // click on like button
     cy.get('.role-required-anonymous.idea-status-OPEN.ajax-form')
-      .first().click()
+      .first()
+      .click()
 
     // oauth postcode
     cy.get('input.input-field')
