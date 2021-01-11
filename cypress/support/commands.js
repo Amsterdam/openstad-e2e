@@ -46,16 +46,29 @@ Cypress.Commands.add("login", (authUrl, emailAddress, inboxId) => {
   cy.get('.btn.btn-primary')
     .click()
 
+   cy.wait(10000)
+
   return cy.waitForLatestEmail(inboxId).then((receivedEmail) => {
-    console.log('receivedEmail', receivedEmail);
+    console.log('receivedEmail', receivedEmail.body);
 
     // add http/s? Test only works with https urls, not local http urls, fine for now
-    var urlExpression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+//    var urlExpression = /href="(.*?)"/g;
+    var urlExpression = /href="(.*?)"/g
 
     // extract the login url (so we can confirm the user)
-    url = urlExpression.exec(receivedEmail.body)[1];
+    var testUrl = urlExpression.exec(receivedEmail.body), //receivedEmail.body.match(urlExpression),
+        onlyUrl = testUrl && testUrl[1];
 
-    return cy.visit(url);
+    console.log('onlyUrl1', onlyUrl);
+
+    onlyUrl = onlyUrl.replace(/&amp;/g, '&');
+    console.log('onlyUrl2', onlyUrl);
+
+    cy.log('go to auth url', onlyUrl);
+
+  //  return cy.visit('https://www.google.com');
+    return cy.visit(onlyUrl);
+//return cy.visit(onlyUrl);
     // { subject: '...', body: '...' }
   });
 });

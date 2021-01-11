@@ -23,25 +23,25 @@ describe('Budgeting selecting ideas', () => {
     const firstName = 'First name';
 
     cy.get('[name="firstName"]')
-      .type(firstName)
+      .type(firstName);
 
     cy.get('[name="email"]')
-      .type(freshEmailAddress)
+      .type(freshEmailAddress);
 
     // currently captcha is easily stepped passed by just removing then
     // areYouABot field, this works now because bots don't bother breaking down our specific spam
     // in case we start receiving spam again we need something a bit stronger
     cy.get('[name="areYouABot"]')
-      .invoke('remove')
+      .invoke('remove');
 
     cy.get('[type="submit"]')
       .click();
 
     cy.get('.error-message')
-      .should('not.be.visible')
+      .should('not.be.visible');
 
     cy.get('.success-message')
-      .should('be.visible')
+      .should('be.visible');
   });
 
   it('Subscribe with a used e-mail', () => {

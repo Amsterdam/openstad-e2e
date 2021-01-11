@@ -16,14 +16,16 @@ describe('Budgeting selecting ideas', () => {
       .click()
 
     cy.get('.button-add-idea-to-budget')
-      .first().click()
+      .first()
+      .click()
 
     cy.get('.button-add-idea-to-budget')
       .should('have.class','added')
 
    //click it again, this should remove added class
     cy.get('.button-add-idea-to-budget')
-      .first().click()
+      .first()
+      .click();
 
     cy.get('.button-add-idea-to-budget')
       .should('not.have.class','added')
@@ -48,7 +50,6 @@ describe('Budgeting selecting ideas', () => {
      cy.get('.button-add-idea-to-budget')
        .first()
        .click();
-
   });
 
   it('Minimum reached next step allowed', () => {
@@ -56,7 +57,6 @@ describe('Budgeting selecting ideas', () => {
      cy.get('.button-add-idea-to-budget')
        .first()
        .click();
-
   });
 
 })

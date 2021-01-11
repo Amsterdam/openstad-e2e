@@ -11,12 +11,12 @@ const getDefaultSiteFields = () => {
   return [{
     name: 'siteName',
     type: 'text',
-    validInput: 'Test Site ' + new DateTime().getTime()
+    validInput: 'Test Site ' + new Date().getTime()
   },
   {
     name: 'domain',
     type: 'text',
-    validInput: 'test-site-' + new DateTime().getTime()
+    validInput: 'test-site-' + new Date().getTime()
   },
   {
     name: 'fromEmail',
@@ -84,7 +84,7 @@ const navigateToSiteCreatePage = () => {
 // A large test, but contains basic crud of a site
 describe('Filling, validating, submitting, editing, deleting a site', () => {
   it('Login succesfull', () => {
-    cy.loginAdmin(Cypress.env('adminUrl'));
+    cy.loginAdminPanel();
 
     cy.get('.title')
       .should('have.text', 'Sites');
@@ -219,8 +219,8 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     const editUrl = Cypress.env('adminUrl') + '/admin/site/' + createdSites[0];
     cy.visit(editUrl);
 
-    const newUser = 'user-' + new DateTime();
-    const newPassword = 'pw-' + new DateTime();
+    const newUser = 'user-' + new Date();
+    const newPassword = 'pw-' + new Date();
 
     fillInField('basicAuthUser', 'text', newUser, cy);
     fillInField('basicAuthPassword', 'text', newPassword, cy);

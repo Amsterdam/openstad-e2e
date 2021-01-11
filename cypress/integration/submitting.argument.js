@@ -34,8 +34,7 @@ describe('Submitting arguments', () => {
 
   it('Login and navigate to a page with arguments', () => {
     // goto site
-    cy.loginUser();
-
+    cy.loginUser(Cypress.env('submittingSiteUrl'));
     navitageToPageForArguments(cy);
   });
 
@@ -59,7 +58,7 @@ describe('Submitting arguments', () => {
     cy.get('.argument-form')
       .its('length')
       .should('be.gte', 0)
-      
+
   });
 
   it('Argument form allows submitting an argument', () => {

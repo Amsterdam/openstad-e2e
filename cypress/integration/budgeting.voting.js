@@ -19,10 +19,14 @@ describe('Budgeting selecting ideas', () => {
       .first()
       .click()
 
-    cy.get('#next-button')
-      .click()
+    cy.scrollTo('top');
+    cy.wait(1000)
 
-    cy.screenshot();
+    cy.get('button')
+      .contains('Volgende')
+      .click();
+
+//    cy.screenshot();
 
     //second step, see if overview of selected step is correctly rendered
     cy.get('.overview')
@@ -32,7 +36,13 @@ describe('Budgeting selecting ideas', () => {
 
     cy.get('#next-button')
       .click();
-      
+
+    cy.wait(100)
+
+    cy.get('a')
+      .contains('Vul je stemcode in')
+      .click();
+
   });
 
 })
