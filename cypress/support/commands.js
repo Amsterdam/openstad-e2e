@@ -33,7 +33,7 @@ Cypress.Commands.add("waitForLatestEmail", (inboxId) => {
   return mailslurp.waitForLatestEmail(inboxId);
 });
 
-Cypress.Commands.add("login", (authUrl, emailAddress, inboxId) => {
+Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, basicAuth) => {
   // directly go to login url
   // /login redirects to auth server
   cy.visit(authUrl);
@@ -46,7 +46,7 @@ Cypress.Commands.add("login", (authUrl, emailAddress, inboxId) => {
   cy.get('.btn.btn-primary')
     .click()
 
-   cy.wait(10000)
+   cy.wait(6000)
 
   return cy.waitForLatestEmail(inboxId).then((receivedEmail) => {
     console.log('receivedEmail', receivedEmail.body);
@@ -59,17 +59,31 @@ Cypress.Commands.add("login", (authUrl, emailAddress, inboxId) => {
     var testUrl = urlExpression.exec(receivedEmail.body), //receivedEmail.body.match(urlExpression),
         onlyUrl = testUrl && testUrl[1];
 
-    console.log('onlyUrl1', onlyUrl);
-
+    // for some reason email body doesn't have correct ampersand in url, search and replace
     onlyUrl = onlyUrl.replace(/&amp;/g, '&');
-    console.log('onlyUrl2', onlyUrl);
 
     cy.log('go to auth url', onlyUrl);
 
   //  return cy.visit('https://www.google.com');
-    return cy.visit(onlyUrl);
-//return cy.visit(onlyUrl);
-    // { subject: '...', body: '...' }
+    const options = basicAuth ? basicAuth : {
+      auth: basicAuth
+    };
+
+    // basicAuth is mainly for end url, in this setup it's encoded in the returnto url
+    // we need to pass the credentials in the url otherwise we get a basic auth popup and it blocks the test
+    // @TODO currently this fails because API fails on the login, need to debug why
+    if (basicAuth) {
+      const pieceToReplace = 'returnTo%3Dhttps%3A%2F%2F';
+      // add the : and @ in urlencoded chars
+      const urlBasicAuth = `${basicAuth.user}%3A${basicAuth.pass}%40`;
+      const pieceWithBasicAuth = `${pieceToReplace}${urlBasicAuth}`;
+
+      onlyUrl = onlyUrl.replace(pieceToReplace, pieceWithBasicAuth);
+    }
+
+    cy.log('onlyUrl', onlyUrl)
+
+    return cy.visit(onlyUrl, options);
   });
 });
 
@@ -94,10 +108,12 @@ Cypress.Commands.add("loginAdmin", (url, email) => {
   return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"));
 });
 
-Cypress.Commands.add("loginAdminPanel", (url, email) => {
+Cypress.Commands.add("loginAdminPanel", () => {
+
   // directly go to login url
   // /login redirects to auth server
-  cy.visit(Cypress.env('adminUrl') + '/admin/oauth/login')
+  let url = Cypress.env('adminUrl') + '/admin/oauth/login';
+
   return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"));
 });
 

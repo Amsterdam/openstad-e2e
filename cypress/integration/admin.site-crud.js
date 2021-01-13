@@ -5,6 +5,9 @@ Cypress.on('uncaught:exception', (err, runnable) => {
   return false;
 })
 
+
+let siteId;
+
 const createdSites = [];
 
 const getDefaultSiteFields = () => {
@@ -36,7 +39,7 @@ const copySiteFields = [
     name: 'siteIdToCopy',
     type: 'select',
     // plannen insturen site
-    validInput: 221
+    validInput: '221'
   }
 ];
 
@@ -46,7 +49,7 @@ const importSiteFields = [
 
 const fillInForm = (siteFields, cy) => {
   siteFields.forEach((field, i) => {
-    fillInField();
+    fillInField(field.name, field.validInput, field.type, cy);
   });
 }
 
@@ -66,11 +69,21 @@ const submitForm = (cy) => {
     .click();
 }
 
-const checkIfSiteCreationIsSuccesfull = (ct) => {
+const checkIfSiteCreationIsSuccesfull = (cy) => {
   /**
    * @todo fetch basic auth credentials, test if working, also test change of password
    */
+  return Promise((resolve, reject) => {
+    cy.url().then(url => {
+      cy.log('url', url);
 
+      const siteId = url.substring(url.lastIndexOf('/') + 1);
+
+      cy.log('siteId', siteId);
+
+      resolve(siteId);
+    });
+  });
 };
 
 const navigateToSiteCreatePage = () => {
@@ -83,139 +96,54 @@ const navigateToSiteCreatePage = () => {
 
 // A large test, but contains basic crud of a site
 describe('Filling, validating, submitting, editing, deleting a site', () => {
-  it('Login succesfull', () => {
+  it('Login succesfull',  () => {
     cy.loginAdminPanel();
 
-    cy.get('.title')
-      .should('have.text', 'Sites');
-  });
+  //  cy.get('.section-header')
+    //  .should('have.text', 'Sites');
 
-  it('Copy a site', () => {
+    cy.log('Go to copy page');
+
+  //  cy.wait(1000);
+
+    // go to voting page
+    cy.contains('Kopieer site')
+      .click();
+
+    cy.wait(1000);
+
+    cy.log('Copy a site');
+
+    fillInForm([...getDefaultSiteFields(), ...copySiteFields], cy)
+
+    cy.wait(1000);
+
+    submitForm(cy);
+
+    cy.log('Import a new empty site');
+
     cy.visit(Cypress.env('adminUrl'));
 
     // go to voting page
-    cy.get('.btn').contains('Kopieer site')
-      .click();
-
-    fillInForm([...siteFields, ...copySiteFields], cy);
-
-    // should expect correct redirect to new site
-    submitForm(cy);
-
-    checkIfSiteCreationIsSuccesfull(cy);
-
-    // should expect correct redirect to new site
-    const siteId = checkIfSiteCreationIsSuccesfull();
-
-    if (siteId) {
-      createdSites.push(siteId);
-    }
-  });
-
-  it('Create a new budgetting site', () => {
-    navigateToSiteCreatePage(cy)
-
-    fillInForm(getDefaultSiteFields(), cy);
-
-    cy.contains('Participatief begroten')
-      .click();
-
-    submitForm(cy);
-
-    checkIfSiteCreationIsSuccesfull(cy);
-
-    // should expect correct redirect to new site
-    const siteId = checkIfSiteCreationIsSuccesfull();
-
-    if (siteId) {
-      createdSites.push(siteId);
-    }
-  });
-
-  it('Create a new submit site', () => {
-    navigateToSiteCreatePage(cy);
-
-    //fill in form
-    fillInForm(getDefaultSiteFields(), cy);
-
-    cy.contains('Plannen insturen')
-      .click();
-
-    checkIfSiteCreationIsSuccesfull();
-
-    // should expect correct redirect to new site
-    const siteId = checkIfSiteCreationIsSuccesfull();
-
-    if (siteId) {
-      createdSites.push(siteId);
-    }
-  });
-
-  it('Create a new vote site', () => {
-    navigateToSiteCreatePage(cy);
-
-    //fill in form
-    fillInForm(getDefaultSiteFields(), cy);
-
-    cy.contains('Stemsite')
-      .click();
-
-    checkIfSiteCreationIsSuccesfull();
-
-    // should expect correct redirect to new site
-    const siteId = checkIfSiteCreationIsSuccesfull();
-
-    if (siteId) {
-      createdSites.push(siteId);
-    }
-  });
-
-  it('Create a new empty site', () => {
-    navigateToSiteCreatePage(cy);
-
-    //fill in form
-    fillInForm(getDefaultSiteFields(), cy);
-
-    cy.contains('Lege site')
-      .click();
-
-    submitForm(cy);
-
-    checkIfSiteCreationIsSuccesfull(cy);
-
-    // should expect correct redirect to new site
-    const siteId = checkIfSiteCreationIsSuccesfull();
-
-    if (siteId) {
-      createdSites.push(siteId);
-    }
-  });
-
-/*
-  it('Import a new empty site', () => {
-    cy.visit(Cypress.env('adminUrl'));
-
-    // go to voting page
-    cy.get('.btn').contains('import');
+    cy.get('.btn')
+      .contains('import')
       .click();
 
     fillInForm([...getDefaultSiteFields(), ...importSiteFields], cy);
 
     submitForm(cy);
 
-    checkIfSiteCreationIsSuccesfull(cy);
+    cy.url()
+      .then(url => {
+      cy.log('url', url);
 
-    // should expect correct redirect to new site
-    const siteId = checkIfSiteCreationIsSuccesfull();
+      siteId = url.substring(url.lastIndexOf('/') + 1);
 
-    if (siteId) {
-      createdSites.push(siteId);
-    }
-  });
-  */
+      cy.log('siteId', siteId);
+    });
 
-  it('Edit basic auth of first created site', () => {
-    // assume first site exists
+    cy.log('Site ID Latest', siteId);
+
     const editUrl = Cypress.env('adminUrl') + '/admin/site/' + createdSites[0];
     cy.visit(editUrl);
 
@@ -246,21 +174,30 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
 
   });
 
+  //it('Copy a site 2', () => {
+    // visit
+//  cy.visit(Cypress.env('adminUrl') + '/admin');
 
-  it('Delete created sites', () => {
-    // delete created site to clean up and test at the same time
-    createdSites.forEach((site, i) => {
-      const deleteUrl = Cypress.env('adminUrl') + '/admin/site/' + site.id;
-      cy.visit(deleteUrl);
+  //  cy.log('Go to copy page');
 
-      cy.get('.btn')
-        .contains('verwijder')
-        click();
+    // go to voting page
+//    cy.contains('Kopieer site')
+  //    .click();
 
-      // same ure should now give a 404
-      cy.visit(deleteUrl);
-    });
-  })
+  /*  fillInForm([...getDefaultSiteFields(), ...copySiteFields], cy);
 
+    // should expect correct redirect to new site
+    submitForm(cy);
+
+    checkIfSiteCreationIsSuccesfull(cy);
+
+    // should expect correct redirect to new site
+    const siteId = checkIfSiteCreationIsSuccesfull();
+
+    if (siteId) {
+      createdSites.push(siteId);
+    }
+  });
+*/
 
 })
