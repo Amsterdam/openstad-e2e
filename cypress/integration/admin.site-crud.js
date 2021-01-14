@@ -14,12 +14,12 @@ const getDefaultSiteFields = () => {
   return [{
     name: 'siteName',
     type: 'text',
-    validInput: 'Test Site ' + new Date().getTime()
+    validInput: 'Cypress test' + new Date().getTime()
   },
   {
     name: 'domain',
     type: 'text',
-    validInput: 'test-site-' + new Date().getTime()
+    validInput: 'cy-' + new Date().getTime()
   },
   {
     name: 'fromEmail',
@@ -38,8 +38,7 @@ const copySiteFields = [
   {
     name: 'siteIdToCopy',
     type: 'select',
-    // plannen insturen site
-    validInput: '221'
+    validInput: '223'
   }
 ];
 
@@ -57,7 +56,7 @@ const fillInField = (name, value, type, cy) => {
   const fieldRef = cy.get(`[name="${name}"]`);
 
   if (type === 'text') {
-    fieldRef.type(value)
+    fieldRef.clear().type(value)
   } else if (type === 'select' || 'checkbox') {
     fieldRef.select(value)
   }
@@ -96,15 +95,10 @@ const navigateToSiteCreatePage = () => {
 
 // A large test, but contains basic crud of a site
 describe('Filling, validating, submitting, editing, deleting a site', () => {
-  it('Login succesfull',  () => {
+  it('Copy a site',  () => {
     cy.loginAdminPanel();
 
-  //  cy.get('.section-header')
-    //  .should('have.text', 'Sites');
-
     cy.log('Go to copy page');
-
-  //  cy.wait(1000);
 
     // go to voting page
     cy.contains('Kopieer site')
@@ -119,85 +113,82 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     cy.wait(1000);
 
     submitForm(cy);
+  });
 
-    cy.log('Import a new empty site');
-
-    cy.visit(Cypress.env('adminUrl'));
+  it('Create site and change basic ',  () => {
+    cy.loginAdminPanel();
 
     // go to voting page
     cy.get('.btn')
-      .contains('import')
+      .contains('Maak nieuwe site')
       .click();
 
-    fillInForm([...getDefaultSiteFields(), ...importSiteFields], cy);
+    fillInForm([...getDefaultSiteFields()], cy);
+
+    cy.contains('Participatief begroten')
+      .first()
+      .click();
 
     submitForm(cy);
 
     cy.url()
       .then(url => {
-      cy.log('url', url);
+        cy.log('url', url);
+        siteId = url.substring(url.lastIndexOf('/') + 1);
 
-      siteId = url.substring(url.lastIndexOf('/') + 1);
+        cy.log('Site ID Latest', siteId);
 
-      cy.log('siteId', siteId);
-    });
+        const editUrl = Cypress.env('adminUrl') + '/admin/site/' + siteId + '/settings/basic-auth';
+        cy.visit(editUrl);
 
-    cy.log('Site ID Latest', siteId);
+        const newUser = 'user-' + new Date().getTime();
+        const newPassword = 'pw-' + new Date().getTime();
 
-    const editUrl = Cypress.env('adminUrl') + '/admin/site/' + createdSites[0];
-    cy.visit(editUrl);
+        fillInField('config[basicAuth][user]', newUser, 'text', cy);
+        fillInField('config[basicAuth][password]', newPassword, 'text', cy);
 
-    const newUser = 'user-' + new Date();
-    const newPassword = 'pw-' + new Date();
+        submitForm(cy);
 
-    fillInField('basicAuthUser', 'text', newUser, cy);
-    fillInField('basicAuthPassword', 'text', newPassword, cy);
+        //input should be changed
+        cy.visit(Cypress.env('adminUrl') + '/admin/site/' + siteId + '/settings');
 
-    submitForm(cy);
+        cy.wait(1000)
 
-    //input should be changed
-    cy.get('[name=basicAuthUser]').
+        // get the site url
+        cy.get('[name=productionUrl]')
+          .first()
+          .invoke('val')
+          .then((siteUrl) => {
+            // visit site, throws error if basic auth is false
+            cy.log('visit site, throws error if basic auth is false');
 
-    // get the site url
-    cy.get('[name=productionUrl]')
-      .first()
-      .invoke('val')
-      .then((siteUrl) => {
-        // visit site, throws error if basic auth is false
-        cy.visit(siteUrl, {
-          auth: {
-            username: newUser,
-            password: newPassword
-          }
-        });
-      })
+            cy.visit(siteUrl, {
+              auth: {
+                username: newUser,
+                password: newPassword
+              }
+            });
+
+            cy.wait(2000)
+
+            const settingsUrl = Cypress.env('adminUrl') + '/admin/site/' + siteId + '/settings';
+            cy.visit(settingsUrl);
+
+            cy.log('Delete site ');
+
+            cy.wait(1000)
+
+            cy.get('button')
+              .contains('Verwijder')
+              .click();
+
+            cy.wait(1000)
+
+            cy.log('Finito');
+          })
+      });
 
   });
 
-  //it('Copy a site 2', () => {
-    // visit
-//  cy.visit(Cypress.env('adminUrl') + '/admin');
-
-  //  cy.log('Go to copy page');
-
-    // go to voting page
-//    cy.contains('Kopieer site')
-  //    .click();
-
-  /*  fillInForm([...getDefaultSiteFields(), ...copySiteFields], cy);
-
-    // should expect correct redirect to new site
-    submitForm(cy);
-
-    checkIfSiteCreationIsSuccesfull(cy);
-
-    // should expect correct redirect to new site
-    const siteId = checkIfSiteCreationIsSuccesfull();
-
-    if (siteId) {
-      createdSites.push(siteId);
-    }
-  });
-*/
 
 })

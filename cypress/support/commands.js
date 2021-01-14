@@ -33,6 +33,7 @@ Cypress.Commands.add("waitForLatestEmail", (inboxId) => {
   return mailslurp.waitForLatestEmail(inboxId);
 });
 
+
 Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, basicAuth) => {
   // directly go to login url
   // /login redirects to auth server
@@ -48,11 +49,13 @@ Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, basicAuth) => {
 
    cy.wait(6000)
 
-  return cy.waitForLatestEmail(inboxId).then((receivedEmail) => {
-    console.log('receivedEmail', receivedEmail.body);
+   cy.loginByLatestEmail(inboxId, basicAuth);
+});
 
+Cypress.Commands.add("loginByLatestEmail", (inboxId, basicAuth) => {
+  return cy.waitForLatestEmail(inboxId).then((receivedEmail) => {
     // add http/s? Test only works with https urls, not local http urls, fine for now
-//    var urlExpression = /href="(.*?)"/g;
+  //    var urlExpression = /href="(.*?)"/g;
     var urlExpression = /href="(.*?)"/g
 
     // extract the login url (so we can confirm the user)
@@ -81,16 +84,15 @@ Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, basicAuth) => {
       onlyUrl = onlyUrl.replace(pieceToReplace, pieceWithBasicAuth);
     }
 
-    cy.log('onlyUrl', onlyUrl)
-
     return cy.visit(onlyUrl, options);
   });
 });
 
+
 Cypress.Commands.add("loginUser", (url) => {
   // directly go to login url
   // /login redirects to auth server
-  url = url + '/login';
+  url = url + '/login' ;
   return cy.login(url, Cypress.env("defaultUserEmail"), Cypress.env("defaultUserMailSlurpInboxId"));
 });
 
