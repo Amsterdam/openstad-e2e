@@ -50,21 +50,23 @@ describe('Voting on an idea', () => {
     cy.url().then(url => {
       cy.loginUser(url);
     });
-  });
 
-  // in most case we are reusing the e-mail adress, so only first time
-  // @todo create dynamic email address to vote
-  // it's posisble with mailslurp, but too many runs per month will push up the costs per month
-  it('Verify vote', () => {
+    // in most case we are reusing the e-mail adress, so only first time
+    // @todo create dynamic email address to vote
+    // it's posisble with mailslurp, but too many runs per month will push up the costs per month
     // Make sure the validated message is visible
     // In some  bugs a redirect after e-mail verificatioon doesn't redirect back directly to the
     // voting finish button
     cy.contains('Gevalideerd', {matchCase: false})
       .should('be.visible')
 
+    cy.wait(1000)
+
     // click to send vote
     cy.get('#next-button')
       .click();
+
+    cy.wait(1000)
 
     // Gelukt
     cy.contains('Gelukt', {matchCase: false})

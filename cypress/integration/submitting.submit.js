@@ -22,7 +22,7 @@ const formFields = [
   },
   {
     name: 'description',
-    type: 'text',
+    type: 'js-editor',
     // don't validate for now
     invalidInput: null,
     validInput: 'This should be the correct length of a description, fully, without joking, and other things, I\'m fully 100% correct and long enough so that the website allows me to submit an idea.'
@@ -52,10 +52,14 @@ const formFields = [
 const fillInField = (name, value, type, cy) => {
   const fieldRef = cy.get(`[name="${name}"]`);
 
-  if (type === 'text') {
+  if (type === 'js-editor') {
+    cy.get(`#js-editor`).type(value)
+  } else if (type === 'text' && value) {
     fieldRef.type(value)
   } else if (type === 'select' || 'checkbox') {
-    fieldRef.select(value)
+    cy.selectNth('select[name="'+name+'"]', 1)
+
+  //  fieldRef.select(value)
   }
 }
 
@@ -63,24 +67,34 @@ const fillInField = (name, value, type, cy) => {
 // Then cleans up after itself
 describe('Filling, validating, submitting, editing, deleting a ideas', () => {
 
-  it('Form page is reachable', () => {
+  it('Submit an idea', () => {
+
+    cy.wait(1000);
+
+    cy.visit(Cypress.env('submittingSiteUrl'));
+
     cy.loginUser(Cypress.env('submittingSiteUrl'));
 
+    cy.get('.cookie-button')
+      .first()
+      .click({
+        force: true
+      });
+
     // go to first page
-    cy.contains('Plan indienen')
-      .click()
+    cy.get('.menu-cta-button')
+      .first()
+      .click();
 
-    // go to form
-    cy.contains('Verder')
-      .click()
-  });
-
-  it('Filling, validating and submitting the form', () => {
+    // go to form page
+    cy.get('.next-button')
+      .first()
+      .click();
 
     // test validation
     formFields.forEach((field, i) => {
       // go to first page
-      if (field.invalidInput === null) {
+      if (field.invalidInput !== null) {
         fillInField(field.name, field.invalidInput, field.type, cy);
       }
     });
@@ -95,8 +109,9 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
         // in some special cases, mainly checkbox it's different
         // @todo add these later
         cy.get(`[name="${field.name}"]`)
-          .next()
-          .should()
+          .siblings('label.error')
+          .its('length')
+          .should('eq', 1)
       }
     });
 
@@ -115,20 +130,17 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
       fillInField(field.name,  field.validInput, field.type, cy);
     });
 
+    cy.wait(500)
+
     // add location click
     // @todo add more interaction tests
     cy.get('#map')
       .click();
 
+    cy.wait(500)
+
     cy.get('.resource-form [type="submit"]')
       .click()
   });
-
-
-  it('Fields are visible after submitting', () => {
-    // go to first page
-
-  });
-
 
 })

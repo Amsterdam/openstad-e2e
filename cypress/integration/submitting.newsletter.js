@@ -34,8 +34,10 @@ describe('Budgeting selecting ideas', () => {
     cy.get('[name="areYouABot"]')
       .invoke('remove');
 
-    cy.get('[type="submit"]')
+    cy.get('#newsletter-form button[type="submit"]')
       .click();
+
+    cy.wait(2000);
 
     cy.get('.error-message')
       .should('not.be.visible');
@@ -44,7 +46,7 @@ describe('Budgeting selecting ideas', () => {
       .should('be.visible');
   });
 
-  it('Subscribe with a used e-mail', () => {
+  it('Subscribe with a subscribed e-mail addres', () => {
     // add time
     const usedEmailAddress = 'newslettertest@' + Cypress.env('trustedEmailDomain');
     const firstName = 'First name';
@@ -57,7 +59,7 @@ describe('Budgeting selecting ideas', () => {
       .clear()
       .type(usedEmailAddress)
 
-    cy.get('[type="submit"]')
+    cy.get('#newsletter-form button[type="submit"]')
       .click();
 
     cy.get('.error-message')
