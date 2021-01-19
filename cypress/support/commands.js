@@ -50,8 +50,8 @@ Cypress.Commands.add("loginUserWithPassword", (emailAddress, password) => {
 });
 
 
-Cypress.Commands.add("logout", () => {
-  cy.visit('/logout')
+Cypress.Commands.add("logout", (url) => {
+  cy.visit(url + '/logout')
 })
 
 

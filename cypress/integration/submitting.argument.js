@@ -62,6 +62,9 @@ describe('Submitting arguments', () => {
     // goto site
     cy.loginUser(Cypress.env('submittingSiteUrl'));
 
+
+
+
     navitageToPageForArguments(cy);
 
     cy.log('Argument form validation throws an error on a short comment')
@@ -90,6 +93,9 @@ describe('Submitting arguments', () => {
 
     const timestampedReply = new Date().getTime() + ' a reply ' + validArgument;
 
+
+
+
     cy.get(`.argument-container .reply`)
       .first()
       .click();
@@ -114,7 +120,8 @@ describe('Submitting arguments', () => {
 
     const timestampedEditedArgument = new Date().getTime() + ' a reply ' + editedArgument;
 
-    cy.get(`.argument-container .edit`)
+    cy.contains(timestampedArgument)
+      .first()
       .siblings('.user')
       .first()
       .get(`.edit`)
@@ -135,39 +142,81 @@ describe('Submitting arguments', () => {
       .its('length')
       .should('eq', 1);
 
-
-    cy.wait(500)
-
-    cy.log('Delete an argument');
-
-    cy.wait(500)
-
-    cy.contains(timestampedEditedArgument)
+    cy.contains(timestampedReply)
+      .first()
       .siblings('.user')
       .first()
       .get(`.delete`)
       .first()
-      .submit();
+      .click();
 
     cy.wait(500)
 
+/*
     // check if edited argument is deleted
-    cy.contains(timestampedEditedArgument)
+    cy.contains(timestampedReply)
       .its('length')
       .should('eq', 0);
+      */
+
+    cy.wait(500)
+
 
     cy.log('Argument against form allows submitting an argument');
 
     const againstArgument = new Date().getTime() + ' against ' + validArgument;
 
-    submitArgument(cy, againstArgument, false)
+    submitArgument(cy, againstArgument, false);
 
-    cy.contains(againstArgument)
-      .siblings('.user')
-      .first()
-      .get(`.delete`)
-      .first()
-      .submit();
+    cy.url().then((url) => {
+
+      cy.logout(Cypress.env('submittingSiteUrl'));
+
+      cy.visit(url);
+
+      cy.get('.argument button')
+        .contains('Mee eens')
+        .first()
+        .click();
+
+      //modal should be visible
+      cy.get('#login-required')
+        .should('be.visible');
+
+      cy.get('#login-required a')
+        .contains('Inloggen')
+        .first()
+        .click();
+
+
+      cy.loginUserWithPassword(Cypress.env('defaultUserEmail'), Cypress.env('userPassword'));
+
+      cy.wait(500)
+
+
+      cy.contains(timestampedEditedArgument)
+        .parents('.argument')
+        .get(`button`)
+        .contains('Mee eens')
+        .click();
+
+      cy.reload()
+
+      cy.log('Delete an argument');
+
+      cy.contains(timestampedEditedArgument)
+        .parents('.argument')
+        .get(`.delete`)
+        .first()
+        .click();
+
+      cy.reload()
+      // check if edited argument is deleted
+      cy.contains(timestampedEditedArgument).should('be.empty');
+
+
+    })
+
 
   });
 
