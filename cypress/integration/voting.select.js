@@ -42,18 +42,36 @@ describe('Voting on an idea', () => {
         .should('be.visible')
         .click();
 
-        // email
-      cy.get('input.form-input')
-        .type(Cypress.env("defaultUserEmail"))
+       if ( Cypress.env('usePasswordLogin')) {
+
+         cy.get('.btn.btn-primary')
+           .contains("Inlog via Wachtwoord")
+           .click();
+
+         cy.get('input[name="email"]')
+           .type(Cypress.env("defaultUserEmail"))
+
+         cy.get('input[name="password"]')
+         .type(Cypress.env("userPassword"))
+
+         cy.get('.btn.btn-primary')
+           .click()
+       } else {
+
+           // email
+         cy.get('input.form-input')
+           .type(Cypress.env("defaultUserEmail"))
 
 
-      // oauth submit
-      cy.get('.btn.btn-primary')
-        .click()
+         // oauth submit
+         cy.get('.btn.btn-primary')
+           .click()
 
-       cy.wait(6000)
+         cy.wait(6000)
 
-       cy.loginByLatestEmail(Cypress.env("defaultUserMailSlurpInboxId"), false);
+         cy.loginByLatestEmail(Cypress.env("defaultUserMailSlurpInboxId"), false);
+       }
+
 
        cy.wait(1000)
 
