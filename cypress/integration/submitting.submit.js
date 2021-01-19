@@ -11,10 +11,11 @@ const formFields = [
     name: 'title',
     type: 'text',
     invalidInput: 'Too short',
-    validInput: 'I am a title of an idea'
+    validInput: 'I am a title of an idea',
+    checkIfTextOnPage: true
   },
   {
-    title: 'Title',
+    title: 'Summary',
     name: 'summary',
     type: 'text',
     invalidInput: 'Too short',
@@ -29,14 +30,14 @@ const formFields = [
   },
   {
     name: 'extraData[theme]',
-    type: 'text',
+    type: 'select',
     // empty input should give an error
     invalidInput: '',
     validInput: 'Groen en Duurzaam'
   },
   {
     name: 'extraData[area]',
-    type: 'text',
+    type: 'select',
     // empty input should give an error
     invalidInput: '',
     validInput: 'Buurt 1'
@@ -50,17 +51,20 @@ const formFields = [
 ];
 
 const fillInField = (name, value, type, cy) => {
-  const fieldRef = cy.get(`[name="${name}"]`);
-
   if (type === 'js-editor') {
-    cy.get(`#js-editor`).type(value)
+    cy.get(`#js-editor`).clear().type(value)
   } else if (type === 'text' && value) {
-    fieldRef.type(value)
+    cy.get(`[name="${name}"]`).clear().type(value)
   } else if (type === 'select' || 'checkbox') {
     cy.selectNth('select[name="'+name+'"]', 1)
-
-  //  fieldRef.select(value)
   }
+}
+
+//currenlty only works for text fields
+const textIsVisibleOnPage = (content, cy) => {
+  cy.contains(content)
+    .its('length')
+    .should('be.gte', 0)
 }
 
 // A large test, but contains all editing,
@@ -68,8 +72,6 @@ const fillInField = (name, value, type, cy) => {
 describe('Filling, validating, submitting, editing, deleting a ideas', () => {
 
   it('Submit an idea', () => {
-
-    cy.wait(1000);
 
     cy.visit(Cypress.env('submittingSiteUrl'));
 
@@ -152,17 +154,116 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
       fillInField(field.name,  field.validInput, field.type, cy);
     });
 
-    cy.wait(500)
+    cy.wait(200)
 
     // add location click
     // @todo add more interaction tests
     cy.get('#map')
       .click();
 
-    cy.wait(500)
+    cy.wait(200)
 
     cy.get('.resource-form [type="submit"]')
       .click()
+
+    /**
+     * Fill in listed fields with correct values
+     */
+    formFields.forEach((field, i) => {
+      // go to first page
+      if (field.checkIfTextOnPage) {
+        textIsVisibleOnPage(field.validInput, cy);
+      }
+    });
+
+    // go to edit form
+    cy.get('button')
+      .contains('Bewerk')
+      .click()
+
+    /**
+     * Fill in listed fields with edit values
+     */
+     formFields.forEach((field, i) => {
+       fillInField(field.name,  'Edit ' + field.validInput, field.type, cy);
+     });
+
+    cy.get('.resource-form [type="submit"]')
+      .click();
+
+    /**
+     * See if edit was succesfull
+     */
+    formFields.forEach((field, i) => {
+      // go to first page
+      if (field.checkIfTextOnPage) {
+        textIsVisibleOnPage('Edit ' + field.validInput, cy);
+      }
+    });
+
+    cy.wait(500);
+    cy.intercept('api/*').as('apiCall')
+
+    // like the plan
+    cy.get('#idea-vote-form-yes [type="submit"]')
+      .first()
+      .click();
+
+  //  cy.wait('@apiCall');
+
+    cy.reload();
+
+    cy.wait(1000);
+
+    cy.get('.edit').should('not.exist');
+
+    // unlike the plan
+    cy.get('#idea-vote-form-yes [type="submit"]')
+      .first()
+      .click();
+
+//cy.wait('@apiCall');
+
+    // dislike the plan
+    cy.get('#idea-vote-form-no [type="submit"]')
+      .first()
+      .click();
+
+    cy.scrollTo('top')
+    cy.reload();
+
+    // like the plan
+    cy.get('#idea-vote-form-no [type="submit"]')
+      .first()
+      .click();
+
+
+    cy.get('#idea-vote-form-yes [type="submit"]')
+    .first()
+    .click();
+
+    //cy.wait('@apiCall');
+    cy.reload();
+
+    // unlike the plan
+    cy.get('#idea-vote-form-yes [type="submit"]')
+    .first()
+    .click();
+
+
+  //    cy.wait('@apiCall');
+
+    cy.reload();
+
+
+
+    // the edit button should be visible again,
+    cy.get('.edit').its('length').should('eq', 1)
+
+    // the edit button should be visible again,
+    cy.get('button')
+      .contains('Verwijder')
+      .click();
   });
 
 })

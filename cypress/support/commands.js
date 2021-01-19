@@ -50,6 +50,11 @@ Cypress.Commands.add("loginUserWithPassword", (emailAddress, password) => {
 });
 
 
+Cypress.Commands.add("logout", () => {
+  cy.visit('/logout')
+})
+
+
 Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, password) => {
 
   if ( Cypress.env('usePasswordLogin')) {
