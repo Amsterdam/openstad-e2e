@@ -61,10 +61,10 @@ describe('Submitting arguments', () => {
   it('Login and navigate to a page with arguments', () => {
     // goto site
     cy.loginUser(Cypress.env('submittingSiteUrl'));
+
     navitageToPageForArguments(cy);
 
     cy.log('Argument form validation throws an error on a short comment')
-
 
     submitArgument(cy, invalidArgument);
 

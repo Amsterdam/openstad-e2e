@@ -47,12 +47,12 @@ Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, basicAuth) => {
   cy.get('.btn.btn-primary')
     .click()
 
-   cy.wait(6000)
-
-   cy.loginByLatestEmail(inboxId, basicAuth);
+   return cy.loginByLatestEmail(inboxId, basicAuth);
 });
 
 Cypress.Commands.add("loginByLatestEmail", (inboxId, basicAuth) => {
+  cy.wait(10000)
+
   return cy.waitForLatestEmail(inboxId).then((receivedEmail) => {
     // add http/s? Test only works with https urls, not local http urls, fine for now
   //    var urlExpression = /href="(.*?)"/g;
