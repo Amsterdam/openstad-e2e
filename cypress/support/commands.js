@@ -34,23 +34,28 @@ Cypress.Commands.add("waitForLatestEmail", (inboxId) => {
 });
 
 
+Cypress.Commands.add("loginUserWithPassword", (emailAddress, password) => {
+  cy.get('.btn.btn-primary')
+    .contains("Inlog via Wachtwoord")
+    .click();
+
+  cy.get('input[name="email"]')
+    .type(emailAddress)
+
+  cy.get('input[name="password"]')
+  .type(password)
+
+  cy.get('.btn.btn-primary')
+    .click();
+});
+
+
 Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, password) => {
 
   if ( Cypress.env('usePasswordLogin')) {
     cy.visit(authUrl);
 
-    cy.get('.btn.btn-primary')
-      .contains("Inlog via Wachtwoord")
-      .click();
-
-    cy.get('input[name="email"]')
-      .type(emailAddress)
-
-    cy.get('input[name="password"]')
-    .type(password)
-
-    cy.get('.btn.btn-primary')
-      .click()
+    cy.loginUserWithPassword(emailAddress, password)
 
   } else {
     // directly go to login url

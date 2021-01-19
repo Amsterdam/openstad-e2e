@@ -73,14 +73,6 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
 
     cy.visit(Cypress.env('submittingSiteUrl'));
 
-    cy.loginUser(Cypress.env('submittingSiteUrl'));
-
-    cy.get('.cookie-button')
-      .first()
-      .click({
-        force: true
-      });
-
     // go to first page
     cy.get('.menu-cta-button')
       .first()
@@ -91,6 +83,36 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
       .first()
       .click();
 
+    cy.get('h1')
+      .contains('Login')
+      .its('length')
+      .should('eq', 1);
+
+      // go to first page
+    cy.get('.filled-button')
+      .contains('Inloggen')
+      .first()
+      .click();
+
+    cy.loginUserWithPassword(Cypress.env("defaultUserEmail"), Cypress.env("userPassword"));
+
+    cy.get('.cookie-button')
+      .first()
+      .click({
+        force: true
+      });
+
+/*
+    // go to first page
+    cy.get('.menu-cta-button')
+      .first()
+      .click();
+
+    // go to form page
+    cy.get('.next-button')
+      .first()
+      .click();
+*/
     // test validation
     formFields.forEach((field, i) => {
       // go to first page
