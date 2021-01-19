@@ -34,24 +34,46 @@ Cypress.Commands.add("waitForLatestEmail", (inboxId) => {
 });
 
 
-Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, basicAuth) => {
-  // directly go to login url
-  // /login redirects to auth server
-  cy.visit(authUrl);
+Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, password) => {
 
-  // email
-  cy.get('input.form-input')
-    .type(emailAddress)
+  if ( Cypress.env('usePasswordLogin')) {
+    cy.visit(authUrl);
 
-  // oauth submit
-  cy.get('.btn.btn-primary')
-    .click()
+    cy.get('.btn.btn-primary')
+      .contains("Inlog via Wachtwoord")
+      .click();
 
-   return cy.loginByLatestEmail(inboxId, basicAuth);
+    cy.get('input[name="email"]')
+      .type(emailAddress)
+
+    cy.get('input[name="password"]')
+    .type(password)
+
+    cy.get('.btn.btn-primary')
+      .click()
+
+  } else {
+    // directly go to login url
+    // /login redirects to auth server
+    cy.visit(authUrl);
+
+    // email
+    cy.get('input.form-input')
+      .type(emailAddress)
+
+    // oauth submit
+    cy.get('.btn.btn-primary')
+      .click()
+
+      cy.wait(10000)
+
+
+     return cy.loginByLatestEmail(inboxId);
+  }
+
 });
 
 Cypress.Commands.add("loginByLatestEmail", (inboxId, basicAuth) => {
-  cy.wait(10000)
 
   return cy.waitForLatestEmail(inboxId).then((receivedEmail) => {
     // add http/s? Test only works with https urls, not local http urls, fine for now
@@ -93,21 +115,21 @@ Cypress.Commands.add("loginUser", (url) => {
   // directly go to login url
   // /login redirects to auth server
   url = url + '/login' ;
-  return cy.login(url, Cypress.env("defaultUserEmail"), Cypress.env("defaultUserMailSlurpInboxId"));
+  return cy.login(url, Cypress.env("defaultUserEmail"), Cypress.env("defaultUserMailSlurpInboxId"), Cypress.env("userPassword"));
 });
 
 Cypress.Commands.add("loginModerator", (url, email) => {
   // directly go to login url
   // admin url always allows e-mail authentication
   cy.visit(url + '/admin/login')
-  return cy.login(url, Cypress.env("moderatorUserEmail"), Cypress.env("moderatorUserMailSlurpInboxId"));
+  return cy.login(url, Cypress.env("moderatorUserEmail"), Cypress.env("moderatorUserMailSlurpInboxId"), Cypress.env("moderatorPassword"));
 });
 
 Cypress.Commands.add("loginAdmin", (url, email) => {
   // directly go to login url
   // /login redirects to auth server
   cy.visit(url + '/admin/login')
-  return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"));
+  return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"), Cypress.env("adminPassword"));
 });
 
 Cypress.Commands.add("loginAdminPanel", () => {
@@ -116,7 +138,7 @@ Cypress.Commands.add("loginAdminPanel", () => {
   // /login redirects to auth server
   let url = Cypress.env('adminUrl') + '/admin/oauth/login';
 
-  return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"));
+  return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"), Cypress.env("adminPassword"));
 });
 
 
