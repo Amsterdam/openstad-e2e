@@ -1,20 +1,22 @@
 # Cypress test suite for Openstad Integration test
 
-See docs.openstad.amsterdam for more info about type of sites.
+See https://docs.openstad.amsterdam/ for more info about Openstad and it's features.
 
-We are currently testing setting up integration tests for our the following sites:
+This suite currently contains end to end tests for  the following type of sites running on Openstad:
 
 ### Budgeting site
 This is a participatory budgetting site in voting phase, where users need a voting code to be able to vote.
+Tests cover voting, creating voting codes etc.
 
 ### Submitting ideas site
-This is a site where users can sumbit their ideas
+This is a site where users can sumbit their ideas. Tests cover submitting ideas, validating, displaying, editing etc.
 
 ### Voting site
-A small site where users can vote on ideas with their e-mail
+This is a voting site where users can vote on one idea by authenticating with their e-mail.
 
 ### Admin panel
-Much more settings and combinations of sites are available in the Openstad system, these will be added step by step.
+The admin panels allows for creating, editing, and deleting sites. Tests in this suite test the general create, read, delete and update of the site.
+As well as testing the updating of more complicated settings like changing a URL, which involves different servers and correct host settings.
 
 ## Getting started
 
@@ -43,13 +45,19 @@ To run all tests in command line or
 cypress run
 ```
 
-See cypress.com for more details
+See https://docs.cypress.io/ for more details
 
 ### Setting up environment values
 See example.cypress.env.json for values that are being used. Rename this file to cypress.env.json.
-Now it should be possible to open, or run cypress
+Now it should be possible to open, or run cypress:
 
-| Env value  | Description |
+Make sure values below are present, sites are expected to exists. Admin creates and delete sites on the fly, but currently for speed and stability we have chosen to not do this yet for every type of site.
+
+At the moment we advise using user and password login, e-mails.
+
+At the moment the tests don't work for sites with Basic Auth, although Cypress works well with it, after login we redirect via the API and here the Basic Auth credentials currently are not passed along.
+
+| Key  | Description |
 |---|---|
 | votingSiteUrl | (string) Url for a voting site, based on dummy in admin panel  |
 | submittingSiteUrl  | (string) Url for a submitting ideas site, based on dummy in admin panel   |
@@ -63,8 +71,8 @@ Now it should be possible to open, or run cypress
 | userPassword  | Password for defaultUser, if password auth is used  |
 | moderatorUserEmail  |   E-mail address for a moderator user, test expect required fields like firstname and lastname filled  |
 | moderatorUserMailSlurpInboxId  | E-mail inbox id, found at mailslurp.com |
-| adminUserEmail  | E  |
-| adminUserMailSlurpInboxId  |   |
+| adminUserEmail  |  E-mail address for a admin user |
+| adminUserMailSlurpInboxId  |  E-mail inbox id, found at mailslurp.com  |
 | adminPassword  | Password for adminUser, if password auth is used   |
 | trustedEmailDomain  | Domain used for sending emails to random user,   |
 | senderEmail  | E-mailaddress for sending e-mail when creating a site  |
@@ -80,17 +88,17 @@ The following scripts present in package.json makes it possible to easily run an
 "run:staging:subdir": "cypress run --config-file config/staging-subdir.json",
 "open:staging:subdir": "cypress open --config-file config/staging-subdir.json",
 "run:staging": "cypress run --config-file config/staging.json",
-"open:acc": "cypress open --config-file config/acc.json",
-"run:acc": "cypress run --config-file config/acc.json",
+"open:acc": "cypress open --config-file cypress/config/acc.json",
+"run:acc": "cypress run --config-file cypress/config/acc.json",
 "open:acc:subdir": "cypress open --config-file config/acc-subdir.json",
 "run:acc:subdir": "cypress run --config-file config/acc-subdir.json"
 ```
 
-So for instance make sure a config/staging.json is present, and run :
+So for instance make sure a cypress/config/staging.json is present, and run :
 ```
 npm run open:staging
 ```
-and for acc  make sure a config/acc.json is present, and run :
+and for acc  make sure a cypress/config/acc.json is present, and run :
 ```
 npm run open:acc
 ```

@@ -13,14 +13,14 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "open:staging": "cypress open --config-file config/staging.json",
-    "run:staging:subdir": "cypress run --config-file config/staging-subdir.json",
-    "open:staging:subdir": "cypress open --config-file config/staging-subdir.json",
-    "run:staging": "cypress run --config-file config/staging.json",
-    "open:acc": "cypress open --config-file config/acc.json",
-    "run:acc": "cypress run --config-file config/acc.json",
-    "open:acc:subdir": "cypress open --config-file config/acc-subdir.json",
-    "run:acc:subdir": "cypress run --config-file config/acc-subdir.json"
+    "open:staging": "cypress open --config-file cypress/config/staging.json",
+    "run:staging:subdir": "cypress run --config-file cypress/config/staging-subdir.json",
+    "open:staging:subdir": "cypress open --config-file cypress/onfig/staging-subdir.json",
+    "run:staging": "cypress run --config-file cypress/config/staging.json",
+    "open:acc": "cypress open --config-file cypress/config/acc.json",
+    "run:acc": "cypress run --config-file cypress/config/acc.json",
+    "open:acc:subdir": "cypress open --config-file cypress/config/acc-subdir.json",
+    "run:acc:subdir": "cypress run --config-file cypress/config/acc-subdir.json"
   },
   "author": "",
   "license": "ISC"
