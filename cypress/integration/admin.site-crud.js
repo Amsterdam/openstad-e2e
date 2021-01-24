@@ -93,6 +93,17 @@ const navigateToSiteCreatePage = () => {
     .click();
 }
 
+const setBasicAuthPassword = (siteId, newUser, newPassword) => {
+  fillInField('config[basicAuth][user]', newUser, 'text', cy);
+  fillInField('config[basicAuth][password]', newPassword, 'text', cy);
+
+  const editUrl = Cypress.env('adminUrl') + '/admin/site/' + siteId + '/settings/basic-auth';
+
+  cy.visit(editUrl);
+
+  submitForm(cy);
+}
+
 // A large test, but contains basic crud of a site
 describe('Filling, validating, submitting, editing, deleting a site', () => {
   it('Copy a site',  () => {
@@ -136,18 +147,15 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
         cy.log('url', url);
         siteId = url.substring(url.lastIndexOf('/') + 1);
 
-        cy.log('Site ID Latest', siteId);
-
-        const editUrl = Cypress.env('adminUrl') + '/admin/site/' + siteId + '/settings/basic-auth';
-        cy.visit(editUrl);
+        cy.log('Site ID found', siteId);
 
         const newUser = 'user-' + new Date().getTime();
         const newPassword = 'pw-' + new Date().getTime();
 
-        fillInField('config[basicAuth][user]', newUser, 'text', cy);
-        fillInField('config[basicAuth][password]', newPassword, 'text', cy);
+        setBasicAuthPassword(cy, siteId, newUser, newPassword);
 
-        submitForm(cy);
+
+        findUrlAndVisit()
 
         //input should be changed
         cy.visit(Cypress.env('adminUrl') + '/admin/site/' + siteId + '/settings');
