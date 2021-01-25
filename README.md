@@ -34,7 +34,7 @@ Easiest way is to install cypress globally, run the following:
 npm i cypress -g
 ```
 
-Cypress allows for opening tests in a browsers environment where the tests are observable, and after the automated test it's possible to manually test. This is done as follows:
+Cypress allows for opening tests in a browsers environment where the tests are observable, and after the automated test it's possible to manually test. This is done as follows (make sure environemnt values are probably set ty):
 
 ```
 cypress open
@@ -45,17 +45,10 @@ To run all tests in command line or
 cypress run
 ```
 
-See https://docs.cypress.io/ for more details
+See https://docs.cypress.io/ for more details on what's possible with Cypress.
 
 ### Setting up environment values
-See example.cypress.env.json for values that are being used. Rename this file to cypress.env.json.
-Now it should be possible to open, or run cypress:
-
-Make sure values below are present, sites are expected to exists. Admin creates and delete sites on the fly, but currently for speed and stability we have chosen to not do this yet for every type of site.
-
-At the moment we advise using user and password login, e-mails.
-
-At the moment the tests don't work for sites with Basic Auth, although Cypress works well with it, after login we redirect via the API and here the Basic Auth credentials currently are not passed along.
+See example.cypress.env.json for values that are being used. Rename this file to cypress.env.json. Also possible to set up more config files, see below for more info for how it's set up currenty
 
 | Key  | Description |
 |---|---|
@@ -77,21 +70,21 @@ At the moment the tests don't work for sites with Basic Auth, although Cypress w
 | trustedEmailDomain  | Domain used for sending emails to random user,   |
 | senderEmail  | E-mailaddress for sending e-mail when creating a site  |
 
+
+
 ## Running tests for different environments
-In order to be able to test different environments we have staging and acc scripts in package.json loading in different config.
-Cypress allowe
 
 The following scripts present in package.json makes it possible to easily run and open tests for different both staging and acc environments.
 
 ```
-"open:staging": "cypress open --config-file config/staging.json",
-"run:staging:subdir": "cypress run --config-file config/staging-subdir.json",
-"open:staging:subdir": "cypress open --config-file config/staging-subdir.json",
-"run:staging": "cypress run --config-file config/staging.json",
+"open:staging": "cypress open --config-file cypress/config/staging.json",
+"run:staging:subdir": "cypress run --config-file cypress/config/staging-subdir.json",
+"open:staging:subdir": "cypress open --config-file cypress/onfig/staging-subdir.json",
+"run:staging": "cypress run --config-file cypress/config/staging.json",
 "open:acc": "cypress open --config-file cypress/config/acc.json",
 "run:acc": "cypress run --config-file cypress/config/acc.json",
-"open:acc:subdir": "cypress open --config-file config/acc-subdir.json",
-"run:acc:subdir": "cypress run --config-file config/acc-subdir.json"
+"open:acc:subdir": "cypress open --config-file cypress/config/acc-subdir.json",
+"run:acc:subdir": "cypress run --config-file cypress/config/acc-subdir.json"
 ```
 
 So for instance make sure a cypress/config/staging.json is present, and run :
@@ -102,3 +95,11 @@ and for acc  make sure a cypress/config/acc.json is present, and run :
 ```
 npm run open:acc
 ```
+
+
+## Notes
+Make all environment values  are present, sites are expected to exists. Admin creates and delete sites on the fly, but currently for speed and stability we have chosen to not do this yet for every type of site.
+
+At the moment we advise using user and password login, e-mail authentication is relatively unstable since sometimes email take longer then a minute to arrive, although most of the time it's fast enough.
+
+At the moment the tests don't work for sites with Basic Auth, although Cypress works well with it, after login we redirect via the API and here the Basic Auth credentials currently are not passed along.

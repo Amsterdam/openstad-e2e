@@ -7,8 +7,9 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 const adminUrl = Cypress.env('adminUrl');
 const budgettingSiteId =  Cypress.env('budgettingSiteId');
+const incorrectVotingCode = 'Iamincorrect!';
 
-const submitVote = (cy, votingCode) => {
+const submitVote = (cy, votingCode, incorrectVotingCode) => {
 
   cy.scrollTo('top');
 
@@ -39,11 +40,25 @@ const submitVote = (cy, votingCode) => {
     .contains('Vul je stemcode in')
     .click();
 
-  cy.get('[name="unique_code"]')
-    .type(votingCode)
-    .click();
 
-  cy.wait(500);
+  if (incorrectVotingCode) {
+    // first fill in wrong one
+    cy.get('[name="unique_code"]')
+      .type(incorrectVotingCode)
+
+    // submit CODE form
+    cy.get('form [type="submit"]')
+      .click();
+
+    // assert that an error message has been given
+    cy.get('[name="unique_code"].error')
+      .its('length')
+      .should('eq', 1);
+  }
+
+  //
+  cy.get('[name="unique_code"]')
+    .type(votingCode);
 
   // submit CODE form
   cy.get('form [type="submit"]')
@@ -100,7 +115,7 @@ describe('Budgeting selecting ideas', () => {
           .click();
 
 
-        submitVote(cy, votingCode)
+        submitVote(cy, votingCode, incorrectVotingCode)
 
         cy.wait(1000);
 
