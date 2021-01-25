@@ -250,12 +250,7 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
     .first()
     .click();
 
-
-  //    cy.wait('@apiCall');
-
     cy.reload();
-
-
 
     // the edit button should be visible again,
     cy.get('.edit').its('length').should('eq', 1)

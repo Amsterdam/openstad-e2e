@@ -15,7 +15,7 @@ const navitageToPageForArguments = (cy) => {
     .first()
     .click();
 }
-
+u
 
 const validArgument = 'This is a very valid point, and I would like you to agree with me';
 

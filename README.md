@@ -52,16 +52,16 @@ See example.cypress.env.json for values that are being used. Rename this file to
 
 | Key  | Description |
 |---|---|
-| votingSiteUrl | (string) Url for a voting site, based on dummy in admin panel  |
-| submittingSiteUrl  | (string) Url for a submitting ideas site, based on dummy in admin panel   |
-| budgettingSiteUrl  | (string) Url for a participatory budgetting  site, based on dummy in admin panel    |
-| budgettingSiteId  |  (integer) Site ID participatory budgetting  site  |
-| adminUrl  | (string) url for the admin panel |
-| usePasswordLogin  | (boolean) If using password or e-mail authentication, password is stable, e-mail authentication has issues if sending is delayed, current tests expect that multiple authentication methods are expected, in client table should be set as following: authTypes: ['Local', 'Url'] |
+| votingSiteUrl |  Url for a voting site, based on dummy in admin panel  |
+| submittingSiteUrl  | Url for a submitting ideas site, based on dummy in admin panel   |
+| budgettingSiteUrl  | Url for a participatory budgetting  site, based on dummy in admin panel    |
+| budgettingSiteId  |  Site ID participatory budgetting  site  |
+| adminUrl  | url for the admin panel |
+| usePasswordLogin  | (boolean) If using password or e-mail authentication, password is stable, e-mail authentication has issues if sending is delayed, current tests expect that multiple authentication methods are expected, in client table should be set as following: authTypes: ['Local', 'Url']. |
 | mailSlurpApiKey  | For authentication via e-mail Mailslurp is used, api key is generated at mailslurp.com  |
 | defaultUserEmail  | E-mail address for a normal user, test expect required fields like firstname and lastname filled  |
 | defaultUserMailSlurpInboxId  | E-mail inbox id, found at mailslurp.com  |
-| userPassword  | Password for defaultUser, if password auth is used  |
+| userPassword  | Password for defaultUser
 | moderatorUserEmail  |   E-mail address for a moderator user, test expect required fields like firstname and lastname filled  |
 | moderatorUserMailSlurpInboxId  | E-mail inbox id, found at mailslurp.com |
 | adminUserEmail  |  E-mail address for a admin user |
@@ -103,3 +103,5 @@ Make all environment values  are present, sites are expected to exists. Admin cr
 At the moment we advise using user and password login, e-mail authentication is relatively unstable since sometimes email take longer then a minute to arrive, although most of the time it's fast enough.
 
 At the moment the tests don't work for sites with Basic Auth, although Cypress works well with it, after login we redirect via the API and here the Basic Auth credentials currently are not passed along.
+
+The test running for liking anonymously

@@ -47,6 +47,19 @@ Cypress.Commands.add("loginUserWithPassword", (emailAddress, password) => {
 
   cy.get('.btn.btn-primary')
     .click();
+
+});
+
+
+Cypress.Commands.add("fillInRequiredUserFields", (fields) => {
+
+  fields.forEach((field) => {
+    cy.get(`[name="${field.name}"]`)
+      .type(field.value)
+  });
+
+  cy.get('.btn.btn-primary')
+    .click();
 });
 
 
@@ -66,6 +79,10 @@ Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, password) => {
     // directly go to login url
     // /login redirects to auth server
     cy.visit(authUrl);
+
+    cy.get('.btn.btn-primary')
+      .contains("E-mail")
+      .click();
 
     // email
     cy.get('input.form-input')

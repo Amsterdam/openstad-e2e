@@ -16,14 +16,16 @@ describe('Submitting rendering ideas', () => {
       .click()
 
     // check if more then one list item is found
-    cy.get('.tile.idea-item.list-item')
+    cy.get('.tile-list .list-item')
       .its('length')
-      .should('be.gte', 1)
+      .should('be.gte', 1);
+
+    // check if image is present
+    cy.get('.tile-list .list-item .image')
+      .its('style')
+      .should('be.gte', 1);
   });
 
-  it('Sorting on created date', () => {
-
-  });
 
   it('Filter on theme', () => {
 
@@ -40,13 +42,6 @@ describe('Submitting rendering ideas', () => {
             .should('be.eq', itemCount)
           });
       });
-
-      cy.wait(2000)
-
-
-    // reset theme selection
-    cy.get('select[name="theme"]')
-      .select('')
   });
 
   it('Filter on area', () => {
@@ -65,9 +60,6 @@ describe('Submitting rendering ideas', () => {
           });
       });
 
-    // reset area selection
-    cy.get('select[name="area"]')
-      .invoke('val', '')
   });
 
 })
