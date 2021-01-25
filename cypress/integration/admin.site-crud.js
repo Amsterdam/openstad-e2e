@@ -38,7 +38,6 @@ const copySiteFields = [
   {
     name: 'siteIdToCopy',
     type: 'select',
-    // 
     validInput: Cypress.env('budgettingSiteId')
   }
 ];
