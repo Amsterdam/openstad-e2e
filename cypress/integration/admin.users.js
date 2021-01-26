@@ -58,10 +58,10 @@ describe('Testing users in admin panel', () => {
         name: 'lastName',
         value: lastName
       },
-      {
+    /*  {
         name: 'postcode',
         value: postcode
-      }
+      }*/
     ]);
 
     cy.logout();
@@ -77,7 +77,7 @@ describe('Testing users in admin panel', () => {
 
     cy.wait(200);
 
-    cy.contains('Bewerken')
+    cy.contains('Edit')
       .first('click')
 
     cy.get(`roles['${Cypress.env('budgettingSiteId')}']`)
@@ -109,7 +109,7 @@ describe('Testing users in admin panel', () => {
     cy.wait(200);
 
     // @todo, currently no DELETE possible in admin panel
-    cy.contains('Bewerken')
+    cy.contains('Edit')
       .first('click');
   });
 })

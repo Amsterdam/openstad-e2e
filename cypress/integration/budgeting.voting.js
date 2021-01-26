@@ -51,7 +51,8 @@ const submitVote = (cy, votingCode, incorrectVotingCode) => {
       .click();
 
     // assert that an error message has been given
-    cy.get('[name="unique_code"].error')
+    cy.get('[name="unique_code"]')
+      .siblings('.error-label')
       .its('length')
       .should('eq', 1);
   }

@@ -64,6 +64,7 @@ Cypress.Commands.add("fillInRequiredUserFields", (fields) => {
 
 
 Cypress.Commands.add("logout", (url) => {
+  url = url ? url : Cypress.env('votingSiteUrl')
   cy.visit(url + '/logout')
 })
 
