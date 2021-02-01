@@ -77,39 +77,39 @@ describe('Testing users in admin panel', () => {
 
     cy.wait(200);
 
+
+
     cy.contains('Edit')
-      .first('click')
-
-    cy.get(`roles['${Cypress.env('budgettingSiteId')}']`)
       .first()
-      .click();
+      .then(function(ln) {
+          const editUrl= ln.prop('href')
+          cy.visit(editUrl)
 
-    cy.get('[type="submit"]')
-      .first()
-      .click();
+          cy.get(`[name="roles['${Cypress.env('submitSiteId')}']"]`)
+            .first()
+            .click();
 
-    //make user moderator
-    cy.logout();
+          cy.get('[type="submit"]')
+            .first()
+            .click();
 
-    cy.visit(Cypress.env('submittingSiteUrl') + '/admin/login');
+          //make user moderator
+          cy.logout();
 
-    cy.loginUserWithPassword(email, password);
+          // would prefer to use /admin/login since this is route only allowed for admin
+          // however this url is only auth through e-mail, to change this would be big step
+          // cy.visit(Cypress.env('submittingSiteUrl') + '/admin/login');
+          cy.visit(Cypress.env('submittingSiteUrl') + '/login');
 
-    cy.logout();
+          cy.loginUserWithPassword(email, password);
 
-    cy.loginAdminPanel();
+          cy.logout();
 
-    cy.get('a')
-      .contains('Gebruikers')
-      .click();
+          cy.loginAdminPanel();
 
-    cy.get('input[type="search"]')
-      .type(email);
+          // @todo, currently no DELETE possible in admin panel
+          cy.visit(editUrl)
 
-    cy.wait(200);
-
-    // @todo, currently no DELETE possible in admin panel
-    cy.contains('Edit')
-      .first('click');
+    });
   });
 })
