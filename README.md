@@ -96,6 +96,16 @@ and for acc  make sure a cypress/config/acc.json is present, and run :
 npm run open:acc
 ```
 
+Be aware config files expect environemt files to have a property env first. This is not the case for cypress.env.json.
+So like this:
+
+```
+{
+  "env" : {
+    ...
+  }
+}
+```
 
 ## Notes
 Make all environment values  are present, sites are expected to exists. Admin creates and delete sites on the fly, but currently for speed and stability we have chosen to not do this yet for every type of site.
@@ -104,4 +114,6 @@ At the moment we advise using user and password login, e-mail authentication is 
 
 At the moment the tests don't work for sites with Basic Auth, although Cypress works well with it, after login we redirect via the API and here the Basic Auth credentials currently are not passed along.
 
-The test running for liking anonymously
+The test running for liking anonymously is somewhat problematic, since it expects every 5 min, if it's move to the submitting an idea test it always works.
+
+There are some tests, like newsletter submission that first time run won't work because it expects value to exist on second run this doesn't happen anymore.

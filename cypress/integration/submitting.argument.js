@@ -15,7 +15,6 @@ const navitageToPageForArguments = (cy) => {
     .first()
     .click();
 }
-u
 
 const validArgument = 'This is a very valid point, and I would like you to agree with me';
 
@@ -194,7 +193,7 @@ describe('Submitting arguments', () => {
       cy.wait(500)
 
 
-      cy.contains(timestampedEditedArgument)
+      cy.contains(againstArgument)
         .parents('.argument')
         .get(`button`)
         .contains('Mee eens')
@@ -204,7 +203,7 @@ describe('Submitting arguments', () => {
 
       cy.log('Delete an argument');
 
-      cy.contains(timestampedEditedArgument)
+      cy.contains(againstArgument)
         .parents('.argument')
         .get(`.delete`)
         .first()
@@ -212,9 +211,9 @@ describe('Submitting arguments', () => {
 
       cy.reload()
       // check if edited argument is deleted
-      cy.contains(timestampedEditedArgument).should('be.empty');
-
-
+      cy.contains(againstArgument)
+        .its('length')
+        .should('eq', 0);
     })
 
 
