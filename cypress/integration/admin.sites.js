@@ -103,7 +103,7 @@ const setBasicAuthPassword = (cy, siteId, newUser, newPassword) => {
   submitForm(cy);
 }
 
-const findUrlAndVisit = (cy, siteId, basicAuthUser, basicAuthPassword) {
+const findUrlAndVisit = (cy, siteId, basicAuthUser, basicAuthPassword ) => {
   //input should be changed
   cy.visit(Cypress.env('adminUrl') + '/admin/site/' + siteId + '/settings');
 
@@ -124,7 +124,6 @@ const findUrlAndVisit = (cy, siteId, basicAuthUser, basicAuthPassword) {
 
       cy.visit(siteUrl, options);
 
-      cy.wait(2000)
     })
 }
 
@@ -134,13 +133,11 @@ const deleteSite = (cy, siteId) => {
 
   cy.log('Delete site ');
 
-  cy.wait(1000)
+  cy.wait(200)
 
   cy.get('button')
     .contains('Verwijder')
     .click();
-
-  cy.wait(1000)
 
   cy.log('Finito');
 }
