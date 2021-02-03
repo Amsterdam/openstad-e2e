@@ -153,13 +153,11 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     cy.contains('Kopieer site')
       .click();
 
-    cy.wait(1000);
+    cy.wait(200);
 
     cy.log('Copy a site');
 
     fillInForm([...getDefaultSiteFields(), ...copySiteFields], cy)
-
-    cy.wait(1000);
 
     submitForm(cy);
 
@@ -256,6 +254,40 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
     // go to voting page
     cy.get('.btn')
       .contains('Maak nieuwe site')
+      .click();
+
+    fillInForm([...getDefaultSiteFields()], cy);
+
+    cy.contains('Lege site')
+      .first()
+      .click();
+
+    submitForm(cy);
+
+    cy.url()
+      .then(url => {
+        cy.log('url', url);
+        siteId = url.substring(url.lastIndexOf('/') + 1);
+
+        cy.log('Site ID found', siteId);
+
+        const newUser = 'user-' + new Date().getTime();
+        const newPassword = 'pw-' + new Date().getTime();
+
+        setBasicAuthPassword(cy, siteId, newUser, newPassword);
+
+        findUrlAndVisit(cy, siteId, newUser, newPassword);
+
+        deleteSite(cy, siteId)
+      });
+  });
+
+  it('Create a voting site and visit it, then delete it',  () => {
+    cy.loginAdminPanel();
+
+    // go to voting page
+    cy.get('.btn')
+      .contains('Stemsite')
       .click();
 
     fillInForm([...getDefaultSiteFields()], cy);
