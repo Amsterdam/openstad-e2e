@@ -149,14 +149,16 @@ Cypress.Commands.add("loginUser", (url) => {
 Cypress.Commands.add("loginModerator", (url, email) => {
   // directly go to login url
   // admin url always allows e-mail authentication
-  cy.visit(url + '/admin/login')
-  return cy.login(url, Cypress.env("moderatorUserEmail"), Cypress.env("moderatorUserMailSlurpInboxId"), Cypress.env("moderatorPassword"));
+  ///cy.visit(url + '/admin/login')
+  url = url + '/login' ;
+  return cy.login(url , Cypress.env("moderatorUserEmail"), Cypress.env("moderatorUserMailSlurpInboxId"), Cypress.env("moderatorPassword"));
 });
 
 Cypress.Commands.add("loginAdmin", (url, email) => {
   // directly go to login url
   // /login redirects to auth server
-  cy.visit(url + '/admin/login')
+  //cy.visit(url + '/admin/login')
+  url = url + '/login' ;
   return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"), Cypress.env("adminPassword"));
 });
 
