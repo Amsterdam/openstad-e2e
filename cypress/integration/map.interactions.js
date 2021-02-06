@@ -5,18 +5,14 @@
 
 const { WaitForControllerApiFactory } = require("mailslurp-client")
 
-const randomClickCoordinate = () => {
-    return Math.random() * 300
-}
-
-const timestamp = Date.now()
-
 Cypress.on('uncaught:exception', (err, runnable) => {
     // returning false here prevents Cypress from
     // failing the test
     console.log('Error ', err)
     return false;
 })
+
+const timestamp = Date.now()
 
 const formFields = [
     {
@@ -41,6 +37,31 @@ const formFields = [
         expectedFormWarning: 'De tekst is te kort'
     }
 ]
+
+const argument = {
+    invalidInput: 'Te kort',
+    validInput: 'Helvetica authentic keytar, blog photo booth gochujang pour-over sartorial.'
+}
+
+const randomClickCoordinate = () => {
+    return Math.random() * 300
+}
+
+const addOrRemoveLike = () => {
+    cy.get('#likebutton-number-plate-0').then(($numberPlate) => {
+
+        const startValue = parseInt($numberPlate.text())
+
+        cy.get('.osc-number-button-text').then(($likeButton) => {
+            const userHasVoted = $likeButton.hasClass('ocs-user-has-voted')
+            cy.log(`User has voted: ${userHasVoted}`)    
+            cy.log(`Amount of likes before clicking button: ${startValue}`)
+            cy.contains('eens').click()
+            cy.wait(200)
+            cy.get('#likebutton-number-plate-0').should('contain', (userHasVoted ? startValue-1 : startValue+1))
+        })
+    })
+}
 
 describe('Log in and add idea', () => {
 
@@ -107,7 +128,7 @@ describe('Log in and add idea', () => {
     })
 })
 
-describe('Idea can be liked', () => {
+describe('Like and comment idea', () => {
     it('Login in and accept cookies', () => {
         cy.visit(`${Cypress.env('mapSiteUrl')}/kaart`, {
             auth: {
@@ -125,13 +146,20 @@ describe('Idea can be liked', () => {
         cy.get('.osc-info-block-ideas-list-idea').first().click()
     })
 
-    it('Like idea with logged in user', () => {
-        cy.get('#likebutton-number-plate-0').then(($numberPlate) => {
-            const startValue = parseInt($numberPlate.text())
-            cy.log(`startValue: ${startValue}`)
-            cy.contains('eens').click()
-            cy.wait(200)
-            cy.get('#likebutton-number-plate-0').should('contain', (startValue+1))
-        })
+    it('Add and remove like with logged in user', () => {
+        let count = 0;
+        while (count < 3) {
+            addOrRemoveLike()
+            count++
+        }
+    })
+
+    it('Place argument', () => {
+        cy.get('.osc-form-feedback > textarea').type(argument.invalidInput)
+        cy.contains('Verzenden').click()
+        cy.get('.osc-form-warning').should('contain', 'De tekst is te kort')
+        cy.get('.osc-form-feedback > textarea').clear().type(argument.validInput)
+        cy.contains('Verzenden').click()
+        cy.get('.osc-reaction-description').should('contain', argument.validInput)
     })
 })
