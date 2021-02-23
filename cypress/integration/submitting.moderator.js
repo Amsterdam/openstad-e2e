@@ -74,5 +74,25 @@ describe('Actions of a moderator', () => {
     cy.get('#modBreak > p').should('contain', modBreak);
   })
 
+  it('Change status as a moderator', () => {
+    cy.loginModerator(Cypress.env('submittingSiteUrl'));
+
+    cy.visit(Cypress.env('submittingSiteUrl') + '/plannen');
+
+    cy.get('.tile').first().click();
+
+    cy.get('select[name="status"]').select('ACCEPTED');
+
+    cy.wait(5000);
+
+    cy.get('button[name="opinion"]').first().should('be.disabled')
+
+    cy.get('select[name="status"]').select('OPEN');
+
+    cy.wait(5000);
+
+    cy.get('button[name="opinion"]').first().should('not.be.disabled')
+  })
+
 
 })
