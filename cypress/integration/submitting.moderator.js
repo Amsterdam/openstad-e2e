@@ -14,11 +14,19 @@ const fillInField = (name, value, type, cy) => {
   }
 }
 
+const editModBreak = (modBreakText) => {
+  cy.contains('Moderator reactie').click();
+  cy.get('textarea[name="modBreak"]').clear().type(modBreakText);
+  cy.contains('Opslaan').click();
+}
+
+const modBreak = `This is a modbreak ${new Date().getTime()}`
+
 describe('Actions of a moderator', () => {
 
   it('Create a user as an moderator', () => {
       // goto site
-      cy.loginAdmin(Cypress.env('submittingSiteUrl'));
+      cy.loginModerator(Cypress.env('submittingSiteUrl'));
 
       cy.visit(Cypress.env('submittingSiteUrl') + '/admin');
 
@@ -53,6 +61,38 @@ describe('Actions of a moderator', () => {
       cy.wait(200);
 
   });
+
+  it('Edit modbreak as a moderator', () => {
+    cy.loginModerator(Cypress.env('submittingSiteUrl'));
+
+    cy.visit(Cypress.env('submittingSiteUrl') + '/plannen');
+
+    cy.get('.tile').first().click();
+
+    editModBreak(modBreak);
+
+    cy.get('#modBreak > p').should('contain', modBreak);
+  })
+
+  it('Change status as a moderator', () => {
+    cy.loginModerator(Cypress.env('submittingSiteUrl'));
+
+    cy.visit(Cypress.env('submittingSiteUrl') + '/plannen');
+
+    cy.get('.tile').first().click();
+
+    cy.get('select[name="status"]').select('ACCEPTED');
+
+    cy.wait(5000);
+
+    cy.get('button[name="opinion"]').first().should('be.disabled')
+
+    cy.get('select[name="status"]').select('OPEN');
+
+    cy.wait(5000);
+
+    cy.get('button[name="opinion"]').first().should('not.be.disabled')
+  })
 
 
 })
