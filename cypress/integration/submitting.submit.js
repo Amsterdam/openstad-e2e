@@ -158,7 +158,7 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
 
     // add location click
     // @todo add more interaction tests
-    cy.get('#map')
+    cy.get('#nlmaps-holder')
       .click();
 
     cy.wait(200)

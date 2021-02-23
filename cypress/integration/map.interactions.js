@@ -143,7 +143,7 @@ describe('Like and comment idea', () => {
     })
 
     it('Open idea details', () => {
-        cy.get('.osc-info-block-ideas-list-idea').first().click()
+        cy.get('.osc-idea-tile').first().click()
     })
 
     it('Add and remove like with logged in user', () => {
