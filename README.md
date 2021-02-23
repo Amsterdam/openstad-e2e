@@ -1,4 +1,4 @@
-# Cypress test suite for Openstad Integration test
+# Cypress test suite for Openstad end to end testing
 
 See https://docs.openstad.amsterdam/ for more info about Openstad and it's features.
 
