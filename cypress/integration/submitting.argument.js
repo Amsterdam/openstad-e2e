@@ -213,9 +213,7 @@ describe('Submitting arguments', () => {
 
       cy.reload()
       // check if edited argument is deleted
-      cy.contains(againstArgument)
-        .its('length')
-        .should('eq', 0);
+      cy.contains(againstArgument).should('not.exist');
     })
 
 
