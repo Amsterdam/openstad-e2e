@@ -205,9 +205,11 @@ describe('Submitting arguments', () => {
 
       cy.contains(againstArgument)
         .parents('.argument')
-        .get(`.delete`)
-        .first()
-        .click();
+        .within(($argument) => {
+          cy.get(`.delete`)
+          .first()
+          .click();
+        })
 
       cy.reload()
       // check if edited argument is deleted
