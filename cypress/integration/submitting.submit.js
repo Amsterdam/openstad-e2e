@@ -115,6 +115,11 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
       .first()
       .click();
 */
+
+    cy.uploadFile("input[type=file]", "image-for-upload.jpeg", "image/jpeg")
+
+    cy.wait(3000)
+
     // test validation
     formFields.forEach((field, i) => {
       // go to first page

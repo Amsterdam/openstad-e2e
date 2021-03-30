@@ -107,6 +107,8 @@ describe('Log in and add idea', () => {
                 cy.get(field.element).type(field.invalidInput)
             })
         })
+        cy.uploadFile("input[type=file]", "image-for-upload.jpeg", "image/jpeg")
+        cy.wait(6000)
         cy.contains('Versturen').click()
         cy.get('.osc-form-errors-warning').scrollIntoView().should('be.visible')
         formFields.forEach((field, i) => {
