@@ -209,3 +209,22 @@ Cypress.Commands.add("selectNth", (select, pos) => {
          .select(e.val())
     })
 })
+
+// source: https://stackoverflow.com/questions/65234122/
+Cypress.Commands.add("uploadFile", (selector, fileUrl, type = "") => {
+  return cy.get(selector).then(subject => {
+    return cy
+      .fixture(fileUrl, "base64")
+      .then(Cypress.Blob.base64StringToBlob)
+      .then(blob => {
+        return cy.window().then(win => {
+          const el = subject[0];
+          const testFile = new win.File([blob], fileUrl, { type });
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(testFile);
+          el.files = dataTransfer.files;
+          return cy.wrap(subject).trigger('change', {force: true});
+        });
+      });
+  });
+});
