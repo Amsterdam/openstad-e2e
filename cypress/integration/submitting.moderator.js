@@ -94,5 +94,23 @@ describe('Actions of a moderator', () => {
     cy.get('button[name="opinion"]').first().should('not.be.disabled')
   })
 
+  it('View and disable likes/votes as a moderator', () => {
+    cy.loginModerator(Cypress.env('submittingSiteUrl'));
+
+    cy.visit(Cypress.env('submittingSiteUrl') + '/plannen');
+
+    cy.get('.tile').first().click();
+
+    cy.get('.votes-overview-button').click();
+
+    cy.wait(2000);
+
+    cy.get(':nth-child(1) > .checked > .vote-toggle-form > .link > .vote-approved-text').first().click();
+
+    cy.wait(2000);
+
+    cy.get('.rejected > .checked > .vote-toggle-form > .link > .vote-unapproved-text').first().click();
+  })
+
 
 })
