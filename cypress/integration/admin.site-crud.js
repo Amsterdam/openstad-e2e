@@ -41,10 +41,6 @@ const copySiteFields = [
   }
 ];
 
-const importSiteFields = [
-
-]
-
 const fillInForm = (siteFields, cy) => {
   siteFields.forEach((field, i) => {
     fillInField(field.name, field.validInput, field.type, cy);
