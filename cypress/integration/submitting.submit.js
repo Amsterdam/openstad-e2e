@@ -228,6 +228,8 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
       .click();
 
 //cy.wait('@apiCall');
+    cy.reload();
+
 
     // dislike the plan
     cy.get('#idea-vote-form-no [type="submit"]')
@@ -242,6 +244,7 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
       .first()
       .click();
 
+    cy.reload();
 
     cy.get('#idea-vote-form-yes [type="submit"]')
     .first()

@@ -85,6 +85,8 @@ describe('Testing users in admin panel', () => {
           const editUrl= ln.prop('href')
           cy.visit(editUrl)
 
+        /*
+        @TODO: Test role login with submit site
           cy.get(`[name="roles['${Cypress.env('submitSiteId')}']"]`)
             .first()
             .click();
@@ -109,7 +111,7 @@ describe('Testing users in admin panel', () => {
 
           // @todo, currently no DELETE possible in admin panel
           cy.visit(editUrl)
-
+*/
     });
   });
 })

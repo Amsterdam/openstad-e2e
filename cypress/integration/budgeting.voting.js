@@ -25,6 +25,7 @@ const submitVote = (cy, votingCode, incorrectVotingCode) => {
       force: true
     });
 
+
   //second step, see if overview of selected step is correctly rendered
   cy.get('.overview')
     .find('tr')

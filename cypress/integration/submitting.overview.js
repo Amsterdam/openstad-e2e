@@ -22,44 +22,44 @@ describe('Submitting rendering ideas', () => {
 
     // check if image is present
     cy.get('.tile-list .list-item .image')
-      .its('style')
+      .its('length')
       .should('be.gte', 1);
   });
 
 
-  it('Filter on theme', () => {
+  it('Filter on theme & area', () => {
 
     cy.selectNth('select[name="theme"]', 0)
       .invoke('val')
       .then(selectedTheme => {
         cy.log('Selected theme: ', selectedTheme);
 
-        //@todo add data-area
-        cy.get('.tile-list .list-item')
-          .its('length', (itemCount) => {
-            cy.get(`.tile-list .list-item [data-theme="${selectedTheme}"]`)
-            .its('length')
-            .should('be.eq', itemCount)
-          });
-      });
-  });
+        cy.reload()
 
-  it('Filter on area', () => {
-    // Select first area
-    cy.selectNth('select[name="area"]', 0)
-      .invoke('val')
-      .then(selectedArea => {
-        cy.log('Selected area: ', selectedArea);
-
-        //@todo add data-area
+          //@todo add data-area
         cy.get('.tile-list .list-item')
-          .its('length', (itemCount) => {
-            cy.get(`.tile-list .list-item data-area=["${selectedArea}"]`)
+          .its('length').then((itemCount) => {
+            cy.get(`.tile-list .list-item[data-theme="${selectedTheme}"]`)
             .its('length')
             .should('be.eq', itemCount)
           });
       });
 
-  });
+      // Select first area
+      cy.selectNth('select[name="area"]', 0)
+          .invoke('val')
+          .then(selectedArea => {
+              cy.log('Selected area: ', selectedArea);
 
+              cy.reload()
+
+              //@todo add data-area
+              cy.get('.tile-list .list-item')
+                  .its('length').then((itemCount) => {
+                  cy.get(`.tile-list .list-item[data-area="${selectedArea}"]`)
+                      .its('length')
+                      .should('be.eq', itemCount)
+              });
+          });
+  });
 })

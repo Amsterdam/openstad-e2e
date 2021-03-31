@@ -15,50 +15,26 @@ describe('Budgeting selecting ideas', () => {
     cy.get('.nav-link').contains('Stemmen')
       .click()
 
+    cy.wait(300)
+
     cy.get('.button-add-idea-to-budget')
       .first()
       .click()
 
+    cy.wait(300)
+
     cy.get('.button-add-idea-to-budget')
       .should('have.class','added')
 
-   //click it again, this should remove added class
+    cy.wait(300)
+
+    //click it again, this should remove added class
     cy.get('.button-add-idea-to-budget')
       .first()
       .click();
 
     cy.get('.button-add-idea-to-budget')
       .should('not.have.class','added')
-  });
-
-  it('Minimum amount not reached next step not allowed', () => {
-
-    //click it again, this should remove added class
-     cy.get('#next-button')
-       .first()
-       .click();
-
-  });
-
-  it('Removing an idea in top', () => {
-    //click it again, this should remove added class
-     cy.get('.button-add-idea-to-budget')
-       .first()
-       .click();
-  });
-
-  it('Navigating with Keyboard', () => {
-    //click it again, this should remove added class
-     cy.get('.button-add-idea-to-budget')
-       .first()
-       .click();
-  });
-
-  it('Minimum reached next step allowed', () => {
-    //click it again, this should remove added class
-     cy.get('.button-add-idea-to-budget')
-       .first()
-       .click();
   });
 
 })
