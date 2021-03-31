@@ -167,11 +167,15 @@ describe('Submitting arguments', () => {
 
     submitArgument(cy, againstArgument, false);
 
+    cy.wait(400);
+
+    cy.reload();
+
     cy.url().then((url) => {
 
       cy.logout(Cypress.env('submittingSiteUrl'));
 
-      cy.visit(url);
+      navitageToPageForArguments(cy);
 
       cy.get('.argument button')
         .contains('Mee eens')

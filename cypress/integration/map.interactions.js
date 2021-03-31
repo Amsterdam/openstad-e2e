@@ -63,7 +63,7 @@ const addOrRemoveLike = () => {
 
 describe('Log in and add idea', () => {
 
-    it('Map should show', () => {
+    it('Map should show, with clicking a marker', () => {
         // goto site
         cy.visit(`${Cypress.env('mapSiteUrl')}/kaart`, {
             auth: {
@@ -79,9 +79,6 @@ describe('Log in and add idea', () => {
         //   check list-part (left) is shown
         cy.get('.osc-ideas-on-map-map').should('be.visible')
 
-    });
-
-    it('Clicking map shows marker', () => {
         cy.get('.leaflet-container').click()
         cy.get('.leaflet-marker-icon').should('be.visible')
     })
@@ -117,15 +114,13 @@ describe('Log in and add idea', () => {
             })
         })
         cy.contains('Versturen').click()
-    })
 
-    it('Newly added idea is opened', () => {
         cy.get('.osc-idea-details > h2').should('contain', formFields[0].validInput)
     })
 })
 
 describe('Like and comment idea', () => {
-    it('Login in and accept cookies', () => {
+    it('Add and remove like with logged in user', () => {
         cy.visit(`${Cypress.env('mapSiteUrl')}/kaart`, {
             auth: {
                 username: Cypress.env('adminBasicAuthUser'),
@@ -133,16 +128,17 @@ describe('Like and comment idea', () => {
             }
         })
         cy.get('a.account').click()
+
         cy.loginUserWithPassword(Cypress.env("defaultUserEmail"), Cypress.env("userPassword"));
+
         cy.get('.cookie-button-blue').click()
+
         cy.contains('Kaart').click()
-    })
 
-    it('Open idea details', () => {
         cy.get('.osc-idea-tile').first().click()
-    })
 
-    it('Add and remove like with logged in user', () => {
+
+
         let count = 0;
         while (count < 3) {
             addOrRemoveLike()
