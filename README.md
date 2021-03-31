@@ -9,10 +9,13 @@ This is a participatory budgetting site in voting phase, where users need a voti
 Tests cover voting, creating voting codes etc.
 
 ### Submitting ideas site
-This is a site where users can sumbit their ideas. Tests cover submitting ideas, validating, displaying, editing etc.
+This is a site where users can submit their ideas. Tests cover submitting ideas, validating, displaying, editing etc.
 
 ### Voting site
 This is a voting site where users can vote on one idea by authenticating with their e-mail.
+
+### Interactive map site
+This is a site where users can submit their ideas on a map.
 
 ### Admin panel
 The admin panels allows for creating, editing, and deleting sites. Tests in this suite test the general create, read, delete and update of the site.
@@ -56,6 +59,7 @@ See example.cypress.env.json for values that are being used. Rename this file to
 | submittingSiteUrl  | Url for a submitting ideas site, based on dummy in admin panel   |
 | budgettingSiteUrl  | Url for a participatory budgetting  site, based on dummy in admin panel    |
 | budgettingSiteId  |  Site ID participatory budgetting  site  |
+| mapSiteUrl | Url for an interactive map site. There is no dummy in the admin panel yet. The interactive map widget should be on the /kaart page. |
 | adminUrl  | url for the admin panel |
 | usePasswordLogin  | (boolean) If using password or e-mail authentication, password is stable, e-mail authentication has issues if sending is delayed, current tests expect that multiple authentication methods are expected, in client table should be set as following: authTypes: ['Local', 'Url']. |
 | mailSlurpApiKey  | For authentication via e-mail Mailslurp is used, api key is generated at mailslurp.com  |
@@ -64,6 +68,7 @@ See example.cypress.env.json for values that are being used. Rename this file to
 | userPassword  | Password for defaultUser
 | moderatorUserEmail  |   E-mail address for a moderator user, test expect required fields like firstname and lastname filled  |
 | moderatorUserMailSlurpInboxId  | E-mail inbox id, found at mailslurp.com |
+| moderatorPassword | Password for moderatorUser |
 | adminUserEmail  |  E-mail address for a admin user |
 | adminUserMailSlurpInboxId  |  E-mail inbox id, found at mailslurp.com  |
 | adminPassword  | Password for adminUser, if password auth is used   |

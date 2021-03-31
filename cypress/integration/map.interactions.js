@@ -33,14 +33,14 @@ const formFields = [
         title: 'Beschrijving',
         element: 'textarea',
         invalidInput: 'abc',
-        validInput: 'Helvetica authentic keytar, blog photo booth gochujang pour-over sartorial. Cardigan pitchfork cold-pressed, raw denim green juice hella live-edge',
+        validInput: `${timestamp} ${timestamp} ${timestamp} ${timestamp} gochujang pour-over sartorial. Cardigan pitchfork cold-pressed, raw denim green juice hella live-edge`,
         expectedFormWarning: 'De tekst is te kort'
     }
 ]
 
 const argument = {
     invalidInput: 'Te kort',
-    validInput: 'Helvetica authentic keytar, blog photo booth gochujang pour-over sartorial.'
+    validInput: `${timestamp} blog photo booth gochujang pour-over sartorial.`
 }
 
 const randomClickCoordinate = () => {
@@ -52,13 +52,11 @@ const addOrRemoveLike = () => {
 
         const startValue = parseInt($numberPlate.text())
 
-        cy.get('.osc-number-button-text').then(($likeButton) => {
-            const userHasVoted = $likeButton.hasClass('ocs-user-has-voted')
-            cy.log(`User has voted: ${userHasVoted}`)    
+        cy.get('.osc-number-button-text').then(($likeButton) => { 
             cy.log(`Amount of likes before clicking button: ${startValue}`)
             cy.contains('eens').click()
             cy.wait(200)
-            cy.get('#likebutton-number-plate-0').should('contain', (userHasVoted ? startValue-1 : startValue+1))
+            cy.get('#likebutton-number-plate-0').should('not.contain', (startValue))
         })
     })
 }
@@ -101,6 +99,7 @@ describe('Log in and add idea', () => {
 
     it('Add idea using integrated form', () => {
         cy.get('.leaflet-container').click(randomClickCoordinate(), randomClickCoordinate())
+        cy.wait(1000)
         cy.contains('Nieuw punt toevoegen').click()
         cy.get('.osc-form-fields')
         formFields.forEach((field, i) => {
@@ -108,6 +107,8 @@ describe('Log in and add idea', () => {
                 cy.get(field.element).type(field.invalidInput)
             })
         })
+        cy.uploadFile("input[type=file]", "image-for-upload.jpeg", "image/jpeg")
+        cy.wait(6000)
         cy.contains('Versturen').click()
         cy.get('.osc-form-errors-warning').scrollIntoView().should('be.visible')
         formFields.forEach((field, i) => {
@@ -118,12 +119,7 @@ describe('Log in and add idea', () => {
         cy.contains('Versturen').click()
     })
 
-    it('Newly added idea is selected and can be opened', () => {
-        cy.get('.osc-info-block-selected-idea').within(() => {
-            cy.get('h4').should('contain', formFields[0].validInput)
-            cy.wait(200)
-            cy.get('.osc-info-block-selected-idea-idea').click()
-        })
+    it('Newly added idea is opened', () => {
         cy.get('.osc-idea-details > h2').should('contain', formFields[0].validInput)
     })
 })
@@ -143,7 +139,7 @@ describe('Like and comment idea', () => {
     })
 
     it('Open idea details', () => {
-        cy.get('.osc-info-block-ideas-list-idea').first().click()
+        cy.get('.osc-idea-tile').first().click()
     })
 
     it('Add and remove like with logged in user', () => {
@@ -151,6 +147,7 @@ describe('Like and comment idea', () => {
         while (count < 3) {
             addOrRemoveLike()
             count++
+            cy.wait(1000)
         }
     })
 

@@ -205,15 +205,15 @@ describe('Submitting arguments', () => {
 
       cy.contains(againstArgument)
         .parents('.argument')
-        .get(`.delete`)
-        .first()
-        .click();
+        .within(($argument) => {
+          cy.get(`.delete`)
+          .first()
+          .click();
+        })
 
       cy.reload()
       // check if edited argument is deleted
-      cy.contains(againstArgument)
-        .its('length')
-        .should('eq', 0);
+      cy.contains(againstArgument).should('not.exist');
     })
 
 
