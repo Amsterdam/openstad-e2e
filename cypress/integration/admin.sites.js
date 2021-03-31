@@ -68,7 +68,7 @@ const submitForm = (cy) => {
     .click();
 }
 
-const checkIfSiteCreationIsSuccesfull = (cy) => {
+const checkIfSiteCreationIsSuccessful = (cy) => {
   /**
    * @todo fetch basic auth credentials, test if working, also test change of password
    */
