@@ -69,7 +69,7 @@ Cypress.Commands.add("logout", (url) => {
 })
 
 
-Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, password) => {
+Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, password, twoFactorSecret) => {
 
   if ( Cypress.env('usePasswordLogin')) {
     cy.visit(authUrl);
@@ -97,6 +97,19 @@ Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, password) => {
 
 
      return cy.loginByLatestEmail(inboxId);
+  }
+
+  cy.wait(300)
+
+  if (twoFactorSecret) {
+    cy.task("generateOTP", twoFactorSecret).then(token => {
+      cy.get(`input[name="twoFactorToken"]`).type(token);
+    });
+
+    // oauth submit
+    cy.get('.btn.btn-primary')
+        .click()
+
   }
 
 });
@@ -168,7 +181,7 @@ Cypress.Commands.add("loginAdminPanel", () => {
   // /login redirects to auth server
   let url = Cypress.env('adminUrl') + '/admin/oauth/login';
 
-  return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"), Cypress.env("adminPassword"));
+  return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"), Cypress.env("adminPassword"), Cypress.env("adminTwoFactorSecret"));
 });
 
 

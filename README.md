@@ -72,6 +72,7 @@ See example.cypress.env.json for values that are being used. Rename this file to
 | adminUserEmail  |  E-mail address for a admin user |
 | adminUserMailSlurpInboxId  |  E-mail inbox id, found at mailslurp.com  |
 | adminPassword  | Password for adminUser, if password auth is used   |
+| adminTwoFactorSecret  | Two factor auth secret for admin users. Currently only implemented for admin user in admin panel. If left empty assumption is made that no 2 factor auth is required for admin panel.   |
 | trustedEmailDomain  | Domain used for sending emails to random user,   |
 | senderEmail  | E-mailaddress for sending e-mail when creating a site  |
 
