@@ -174,7 +174,7 @@ describe('Submitting arguments', () => {
     cy.url().then((url) => {
 
       cy.logout(Cypress.env('submittingSiteUrl'));
-
+      cy.wait(1000)
       navitageToPageForArguments(cy);
 
       cy.get('.argument button')
