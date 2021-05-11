@@ -9,7 +9,12 @@ describe('Budgeting selecting ideas', () => {
 
   it('Adding and removing button', () => {
     // goto site
-    cy.visit(Cypress.env('budgettingSiteUrl'))
+    cy.visit(`${Cypress.env('budgettingSiteUrl')}`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     // go to voting page
     cy.get('.nav-link').contains('Stemmen')

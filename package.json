@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "cypress": "^6.8.0",
+    "cypress": "^7.3.0",
     "cypress-otp": "^1.0.3",
     "dotenv": "^8.2.0",
     "mailslurp-client": "^11.0.0"
@@ -16,7 +16,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "open:staging": "cypress open --config-file cypress/config/staging.json",
     "run:staging:subdir": "cypress run --config-file cypress/config/staging-subdir.json",
-    "open:staging:subdir": "cypress open --config-file cypress/onfig/staging-subdir.json",
+    "open:staging:subdir": "cypress open --config-file cypress/config/staging-subdir.json",
     "run:staging": "cypress run --config-file cypress/config/staging.json",
     "open:acc": "cypress open --config-file cypress/config/acc.json",
     "run:acc": "cypress run --config-file cypress/config/acc.json",

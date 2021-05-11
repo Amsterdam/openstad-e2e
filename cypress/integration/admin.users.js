@@ -45,7 +45,12 @@ describe('Testing users in admin panel', () => {
 
     cy.logout();
 
-    cy.visit(Cypress.env('submittingSiteUrl') + '/login');
+    cy.visit(`${Cypress.env('submittingSiteUrl')}/login`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     cy.loginUserWithPassword(email, password);
 

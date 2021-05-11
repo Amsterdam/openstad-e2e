@@ -73,7 +73,13 @@ describe('Filling, validating, submitting, editing, deleting a ideas', () => {
 
   it('Submit an idea', () => {
 
-    cy.visit(Cypress.env('submittingSiteUrl'));
+    // goto site
+    cy.visit(`${Cypress.env('submittingSiteUrl')}`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     // go to first page
     cy.get('.menu-cta-button')

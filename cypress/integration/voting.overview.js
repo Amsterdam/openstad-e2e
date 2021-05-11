@@ -13,7 +13,12 @@ describe('Overview voting on ideas', () => {
 
   it('Overview should have more then one submitted idea', () => {
     // goto site
-    cy.visit(Cypress.env('votingSiteUrl'))
+    cy.visit(`${Cypress.env('votingSiteUrl')}`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     // check if more then one list item is found
     cy.get('#ideaList .idea-item')

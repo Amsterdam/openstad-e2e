@@ -28,7 +28,12 @@ describe('Actions of a moderator', () => {
       // goto site
       cy.loginModerator(Cypress.env('submittingSiteUrl'));
 
-      cy.visit(Cypress.env('submittingSiteUrl') + '/admin');
+      cy.visit(`${Cypress.env('submittingSiteUrl')}/admin`, {
+        auth: {
+            username: Cypress.env('adminBasicAuthUser'),
+            password: Cypress.env('adminBasicAuthPass')
+        }
+      })
 
       const email = new Date().getTime() + 'user@' + Cypress.env('trustedEmailDomain');
       const password = new Date().getTime() + Cypress.env('adminPassword');
@@ -65,7 +70,12 @@ describe('Actions of a moderator', () => {
   it('Edit modbreak as a moderator', () => {
     cy.loginModerator(Cypress.env('submittingSiteUrl'));
 
-    cy.visit(Cypress.env('submittingSiteUrl') + '/plannen');
+    cy.visit(`${Cypress.env('submittingSiteUrl')}/plannen`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     cy.get('.tile').first().click();
 
@@ -77,7 +87,12 @@ describe('Actions of a moderator', () => {
   it('Change status as a moderator', () => {
     cy.loginModerator(Cypress.env('submittingSiteUrl'));
 
-    cy.visit(Cypress.env('submittingSiteUrl') + '/plannen');
+    cy.visit(`${Cypress.env('submittingSiteUrl')}/plannen`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     cy.get('.tile').first().click();
 
@@ -97,7 +112,12 @@ describe('Actions of a moderator', () => {
   it('View and disable likes/votes as a moderator', () => {
     cy.loginModerator(Cypress.env('submittingSiteUrl'));
 
-    cy.visit(Cypress.env('submittingSiteUrl') + '/plannen');
+    cy.visit(`${Cypress.env('submittingSiteUrl')}/plannen`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     cy.get('.tile').first().click();
 

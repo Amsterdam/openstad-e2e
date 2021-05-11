@@ -9,7 +9,12 @@ describe('Budgeting selecting ideas', () => {
 
   it('Open newsletter modal', () => {
     // goto site
-    cy.visit(Cypress.env('submittingSiteUrl'))
+    cy.visit(`${Cypress.env('submittingSiteUrl')}`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     // go to newsletter
     cy.get('a').contains('Hou mij op de hoogte')
