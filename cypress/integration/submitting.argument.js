@@ -8,7 +8,12 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 const navitageToPageForArguments = (cy) => {
   // goto site
-  cy.visit(Cypress.env('submittingSiteUrl') + '/plannen');
+  cy.visit(`${Cypress.env('submittingSiteUrl')}/plannen`, {
+    auth: {
+        username: Cypress.env('adminBasicAuthUser'),
+        password: Cypress.env('adminBasicAuthPass')
+    }
+  })
 
   // move to first plan
   cy.get('.tile.idea-item.list-item')
@@ -58,6 +63,13 @@ describe('Submitting arguments', () => {
   });
 
   it('Login and navigate to a page with arguments', () => {
+      // goto site
+      cy.visit(`${Cypress.env('submittingSiteUrl')}`, {
+        auth: {
+            username: Cypress.env('adminBasicAuthUser'),
+            password: Cypress.env('adminBasicAuthPass')
+        }
+      })
     // goto site
     cy.loginUser(Cypress.env('submittingSiteUrl'));
 

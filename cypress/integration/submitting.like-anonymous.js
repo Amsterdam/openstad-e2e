@@ -8,7 +8,12 @@ describe('Anonymous liking', () => {
 
   it('Ga naar plan en klik op like', () => {
     // goto site
-    cy.visit(Cypress.env('submittingSiteUrl'))
+    cy.visit(`${Cypress.env('submittingSiteUrl')}`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     // goto plannen
     cy.contains('Plannen')

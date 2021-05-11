@@ -9,7 +9,12 @@ describe('Submitting rendering ideas', () => {
 
   it('Overview should have more then one submitted idea', () => {
     // goto site
-    cy.visit(Cypress.env('submittingSiteUrl'))
+    cy.visit(`${Cypress.env('submittingSiteUrl')}`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     // go to voting page
     cy.get('.nav-link').contains('Plannen')

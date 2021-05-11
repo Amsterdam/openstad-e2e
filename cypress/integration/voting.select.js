@@ -7,8 +7,13 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 describe('Voting on an idea', () => {
 
   it('Click and open an idea', () => {
-      // goto site
-      cy.visit(Cypress.env('votingSiteUrl'));
+    // goto site
+    cy.visit(`${Cypress.env('votingSiteUrl')}`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
       // for some reason we need to login first, otherwise get a security error by cypress
       // because we login in again it's okayish, but prefe

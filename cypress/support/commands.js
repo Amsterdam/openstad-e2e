@@ -45,9 +45,12 @@ Cypress.Commands.add("loginUserWithPassword", (emailAddress, password) => {
   cy.get('input[name="password"]')
   .type(password)
 
+  cy.wait(100)
+
   cy.get('.btn.btn-primary')
     .click();
 
+  cy.wait(100)
 });
 
 
@@ -65,21 +68,36 @@ Cypress.Commands.add("fillInRequiredUserFields", (fields) => {
 
 Cypress.Commands.add("logout", (url) => {
   url = url ? url : Cypress.env('votingSiteUrl')
-  cy.visit(url + '/logout')
+  cy.visit(`${url}/logout`, {
+    auth: {
+        username: Cypress.env('adminBasicAuthUser'),
+        password: Cypress.env('adminBasicAuthPass')
+    }
+  })
 })
 
 
 Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, password, twoFactorSecret) => {
 
   if ( Cypress.env('usePasswordLogin')) {
-    cy.visit(authUrl);
+    cy.visit(`${authUrl}`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     cy.loginUserWithPassword(emailAddress, password)
 
   } else {
     // directly go to login url
     // /login redirects to auth server
-    cy.visit(authUrl);
+    cy.visit(`${authUrl}`, {
+      auth: {
+          username: Cypress.env('adminBasicAuthUser'),
+          password: Cypress.env('adminBasicAuthPass')
+      }
+    })
 
     cy.get('.btn.btn-primary')
       .contains("E-mail")

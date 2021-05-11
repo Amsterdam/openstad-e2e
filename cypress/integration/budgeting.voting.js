@@ -100,7 +100,12 @@ describe('Budgeting selecting ideas', () => {
         cy.log('Voting code found, start the voting process', votingCode);
 
         // goto site
-        cy.visit(Cypress.env('budgettingSiteUrl'))
+        cy.visit(`${Cypress.env('budgettingSiteUrl')}`, {
+          auth: {
+              username: Cypress.env('adminBasicAuthUser'),
+              password: Cypress.env('adminBasicAuthPass')
+          }
+        })
 
         //clear local storage in case previous run is debugged in UI env
         cy.clearLocalStorage();
