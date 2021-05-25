@@ -156,3 +156,26 @@ describe('Like and comment idea', () => {
         cy.get('.osc-reaction-description').should('contain', argument.validInput)
     })
 })
+
+describe('Remove idea', () => {
+    it('Remove idea with moderator user', () => {
+        cy.visit(`${Cypress.env('mapSiteUrl')}/kaart`, {
+            auth: {
+                username: Cypress.env('adminBasicAuthUser'),
+                password: Cypress.env('adminBasicAuthPass')
+            }
+        })
+        cy.get('a.account').click()
+
+        cy.loginUserWithPassword(Cypress.env("moderatorUserEmail"), Cypress.env("moderatorPassword"));
+
+        cy.get('.cookie-button-blue').click()
+
+        cy.visit(`${Cypress.env('mapSiteUrl')}/admin`)
+        cy.contains('Plannen').click()
+        cy.get('[type="checkbox"]').first().check()
+        cy.contains('Delete').click()
+        cy.contains('Confirm').click()
+
+    })
+})
