@@ -92,15 +92,16 @@ describe('Voting on an idea', () => {
 
       cy.wait(1000)
 
-      // click to send vote
-      cy.get('#next-button')
-        .click();
-
       cy.wait(1000)
 
       // Gelukt
       cy.contains('Gelukt, je stem is opgeslagen!', {matchCase: false})
-        .its('length')
-        .should('eq', 1);
+        .should('be.visible');
+
+      cy.contains('Het opslaan van je stem is niet gelukt', {matchCase: false})
+        .should('not.be.visible');
+
+      cy.get('#next-button')
+       .should('not.be.visible');
   });
 })
