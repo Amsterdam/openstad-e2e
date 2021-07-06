@@ -97,5 +97,11 @@ describe('Voting on an idea', () => {
       // Gelukt
       cy.contains('Gelukt, je stem is opgeslagen!', {matchCase: false})
         .should('be.visible');
+
+      cy.contains('Het opslaan van je stem is niet gelukt', {matchCase: false})
+        .should('not.be.visible');
+
+      cy.get('#next-button')
+       .should('not.be.visible');
   });
 })
