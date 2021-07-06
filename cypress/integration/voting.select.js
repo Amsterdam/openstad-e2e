@@ -96,7 +96,6 @@ describe('Voting on an idea', () => {
 
       // Gelukt
       cy.contains('Gelukt, je stem is opgeslagen!', {matchCase: false})
-        .its('length')
-        .should('eq', 1);
+        .should('be.visible');
   });
 })
