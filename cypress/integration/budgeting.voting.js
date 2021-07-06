@@ -124,7 +124,7 @@ describe('Budgeting selecting ideas', () => {
 
         cy.contains('Gelukt, je hebt gestemd!')
           .its('length')
-          .should('be.gte', 0)
+          .should('be.gte', 1)
 
         cy.wait(1000);
 
@@ -147,7 +147,7 @@ describe('Budgeting selecting ideas', () => {
 
         cy.contains('Het opslaan van je stemmen is niet gelukt')
           .its('length')
-          .should('be.gte', 0)
+          .should('be.gte', 1)
 
       });
 
