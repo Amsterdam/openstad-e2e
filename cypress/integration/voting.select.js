@@ -92,10 +92,6 @@ describe('Voting on an idea', () => {
 
       cy.wait(1000)
 
-      // click to send vote
-      cy.get('#next-button')
-        .click();
-
       cy.wait(1000)
 
       // Gelukt
