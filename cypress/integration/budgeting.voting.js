@@ -67,10 +67,6 @@ const submitVote = (cy, votingCode, incorrectVotingCode) => {
     .click();
 
   cy.wait(500);
-
-  // confirm vote
-  cy.get('#next-button')
-    .click();
 }
 
 describe('Budgeting selecting ideas', () => {
