@@ -52,7 +52,7 @@ const addOrRemoveLike = () => {
 
         const startValue = parseInt($numberPlate.text())
 
-        cy.get('.osc-numberplate-button-caption').then(($likeButton) => { 
+        cy.get('#osc-like-button .osc-numberplate-button-caption').then(($likeButton) => { 
             cy.log(`Amount of likes before clicking button: ${startValue}`)
             cy.contains('eens').click()
             cy.wait(200)
