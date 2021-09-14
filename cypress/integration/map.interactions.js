@@ -176,6 +176,6 @@ describe('Remove idea', () => {
         cy.get('[type="checkbox"]').first().check()
         cy.contains('Delete').click()
         cy.contains('Confirm').click()
-
+        cy.wait(2000)
     })
 })
