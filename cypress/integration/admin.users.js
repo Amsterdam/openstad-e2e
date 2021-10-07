@@ -34,7 +34,7 @@ describe('Testing users in admin panel', () => {
     const password = new Date().getTime() + Cypress.env('adminPassword');
     const firstName = 'First Name '+ new Date().getTime();
     const lastName = 'Last Name '+ new Date().getTime();
-    const postcode = 'Postcode '+ new Date().getTime();
+    const postcode = '4321AB';
 
     fillInField('email', email, 'text', cy);
     fillInField('password', password, 'text', cy);
@@ -63,13 +63,15 @@ describe('Testing users in admin panel', () => {
         name: 'lastName',
         value: lastName
       },
-    /*  {
+      {
         name: 'postcode',
         value: postcode
-      }*/
+      }
     ]);
 
-    cy.logout();
+    cy.contains('Uitloggen')
+      .should('exist')
+      .click();
 
     cy.loginAdminPanel();
 

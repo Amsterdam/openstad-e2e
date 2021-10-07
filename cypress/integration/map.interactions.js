@@ -48,15 +48,15 @@ const randomClickCoordinate = () => {
 }
 
 const addOrRemoveLike = () => {
-    cy.get('#osc-like-button #osc-numberplate-0').then(($numberPlate) => {
+    cy.get('#likebutton-number-plate-0').then(($numberPlate) => {
 
         const startValue = parseInt($numberPlate.text())
 
-        cy.get('#osc-like-button .osc-numberplate-button-caption').then(($likeButton) => { 
+        cy.get('.likebutton-name').then(($likeButton) => { 
             cy.log(`Amount of likes before clicking button: ${startValue}`)
             cy.contains('eens').click()
             cy.wait(200)
-            cy.get('#osc-like-button #osc-numberplate-0').should('not.contain', (startValue))
+            cy.get('#likebutton-number-plate-0').should('not.contain', (startValue))
         })
     })
 }
