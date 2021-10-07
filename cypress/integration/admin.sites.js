@@ -42,6 +42,13 @@ const copySiteFields = [
     }
 ];
 
+const templatesToTest = [
+    'Participatief begroten',
+    'Plannen insturen',
+    'Stemsite',
+    'Lege site',
+];
+
 const importSiteFields = []
 
 const fillInForm = (siteFields, cy) => {
@@ -111,6 +118,7 @@ const findUrlAndVisit = (cy, siteId, basicAuthUser, basicAuthPassword) => {
         .invoke('val')
         .then((siteUrl) => {
             // visit site, throws error if basic auth is false
+            cy.log('siteUrl found', siteUrl)
             cy.log('visit site, throws error if basic auth is false');
 
             const options = basicAuthUser && basicAuthPassword ? {
@@ -140,8 +148,49 @@ const deleteSite = (cy, siteId) => {
     cy.log('Finito');
 }
 
+const createVisitDeleteSite = (templateName) => {
+    cy.loginAdminPanel();
+
+    // go to voting page
+    cy.get('.btn')
+        .contains('Maak nieuwe site')
+        .click();
+    
+    cy.contains('Sub domain')
+        .first()
+        .click();
+
+    fillInForm([...getDefaultSiteFields()], cy);
+
+    cy.contains(templateName)
+        .first()
+        .click();
+
+    submitForm(cy);
+
+    cy.url()
+        .then(url => {
+            cy.log('url', url);
+            siteId = url.substring(url.lastIndexOf('/') + 1);
+
+            cy.log('Site ID found', siteId);
+
+            const newUser = 'user-' + new Date().getTime();
+            const newPassword = 'pw-' + new Date().getTime();
+
+            setBasicAuthPassword(cy, siteId, newUser, newPassword);
+
+            findUrlAndVisit(cy, siteId, newUser, newPassword);
+
+            deleteSite(cy, siteId)
+        });
+}
+
 // A large test, but contains basic crud of a site
 describe('Filling, validating, submitting, editing, deleting a site', () => {
+
+    // Copy a site
+
     it('Copy a site', () => {
         cy.loginAdminPanel();
 
@@ -154,6 +203,10 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
         cy.wait(200);
 
         cy.log('Copy a site');
+
+        cy.contains('Sub domain')
+            .first()
+            .click();
 
         fillInForm([...getDefaultSiteFields(), ...copySiteFields], cy)
 
@@ -178,140 +231,12 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
 
     });
 
-    it('Create budgetting site and visit it, then delete it', () => {
-        cy.loginAdminPanel();
+    // Create new site from each template
 
-        // go to voting page
-        cy.get('.btn')
-            .contains('Maak nieuwe site')
-            .click();
-
-        fillInForm([...getDefaultSiteFields()], cy);
-
-        cy.contains('Participatief begroten')
-            .first()
-            .click();
-
-        submitForm(cy);
-
-        cy.url()
-            .then(url => {
-                cy.log('url', url);
-                siteId = url.substring(url.lastIndexOf('/') + 1);
-
-                cy.log('Site ID found', siteId);
-
-                const newUser = 'user-' + new Date().getTime();
-                const newPassword = 'pw-' + new Date().getTime();
-
-                setBasicAuthPassword(cy, siteId, newUser, newPassword);
-
-                findUrlAndVisit(cy, siteId, newUser, newPassword);
-
-                deleteSite(cy, siteId)
-            });
-    });
-
-    it('Create ideas submit site and visit it, then delete it', () => {
-        cy.loginAdminPanel();
-
-        // go to voting page
-        cy.get('.btn')
-            .contains('Maak nieuwe site')
-            .click();
-
-        fillInForm([...getDefaultSiteFields()], cy);
-
-        cy.contains('Plannen insturen')
-            .first()
-            .click();
-
-        submitForm(cy);
-
-        cy.url()
-            .then(url => {
-                cy.log('url', url);
-                siteId = url.substring(url.lastIndexOf('/') + 1);
-
-                cy.log('Site ID found', siteId);
-
-                const newUser = 'user-' + new Date().getTime();
-                const newPassword = 'pw-' + new Date().getTime();
-
-                setBasicAuthPassword(cy, siteId, newUser, newPassword);
-
-                findUrlAndVisit(cy, siteId, newUser, newPassword);
-
-                deleteSite(cy, siteId)
-            });
-    });
-
-    it('Create empty site and visit it, then delete it', () => {
-        cy.loginAdminPanel();
-
-        // go to voting page
-        cy.get('.btn')
-            .contains('Maak nieuwe site')
-            .click();
-
-        fillInForm([...getDefaultSiteFields()], cy);
-
-        cy.contains('Lege site')
-            .first()
-            .click();
-
-        submitForm(cy);
-
-        cy.url()
-            .then(url => {
-                cy.log('url', url);
-                siteId = url.substring(url.lastIndexOf('/') + 1);
-
-                cy.log('Site ID found', siteId);
-
-                const newUser = 'user-' + new Date().getTime();
-                const newPassword = 'pw-' + new Date().getTime();
-
-                setBasicAuthPassword(cy, siteId, newUser, newPassword);
-
-                findUrlAndVisit(cy, siteId, newUser, newPassword);
-
-                deleteSite(cy, siteId)
-            });
-    });
-
-    it('Create a voting site and visit it, then delete it', () => {
-        cy.loginAdminPanel();
-
-        // go to voting page
-        cy.get('.btn')
-            .contains('Maak nieuwe site')
-            .click();
-
-        fillInForm([...getDefaultSiteFields()], cy);
-
-        cy.contains('Stemsite')
-            .first()
-            .click();
-
-        submitForm(cy);
-
-        cy.url()
-            .then(url => {
-                cy.log('url', url);
-                siteId = url.substring(url.lastIndexOf('/') + 1);
-
-                cy.log('Site ID found', siteId);
-
-                const newUser = 'user-' + new Date().getTime();
-                const newPassword = 'pw-' + new Date().getTime();
-
-                setBasicAuthPassword(cy, siteId, newUser, newPassword);
-
-                findUrlAndVisit(cy, siteId, newUser, newPassword);
-
-                deleteSite(cy, siteId)
-            });
-    });
+    templatesToTest.forEach((templateName) => {
+        it(`Create a ${templateName} template site and visit it, then delete it`, () => {
+            createVisitDeleteSite(templateName);    
+        })
+    })
 
 })

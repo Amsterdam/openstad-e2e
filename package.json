@@ -21,7 +21,9 @@
     "open:acc": "cypress open --config-file cypress/config/acc.json",
     "run:acc": "cypress run --config-file cypress/config/acc.json",
     "open:acc:subdir": "cypress open --config-file cypress/config/acc-subdir.json",
-    "run:acc:subdir": "cypress run --config-file cypress/config/acc-subdir.json"
+    "run:acc:subdir": "cypress run --config-file cypress/config/acc-subdir.json",
+    "open:savvy-acc": "cypress open --config-file cypress/config/savvy-acc.json",
+    "run:savvy-acc": "cypress run --config-file cypress/config/savvy-acc.json"
   },
   "author": "",
   "license": "ISC"
