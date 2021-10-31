@@ -23,7 +23,9 @@
     "open:acc:subdir": "cypress open --config-file cypress/config/acc-subdir.json",
     "run:acc:subdir": "cypress run --config-file cypress/config/acc-subdir.json",
     "open:savvy-acc": "cypress open --config-file cypress/config/savvy-acc.json",
-    "run:savvy-acc": "cypress run --config-file cypress/config/savvy-acc.json"
+    "run:savvy-acc": "cypress run --config-file cypress/config/savvy-acc.json",
+    "open:savvy-acc:subdir": "cypress open --config-file cypress/config/savvy-acc-subdir.json",
+    "run:savvy-acc:subdir": "cypress run --config-file cypress/config/savvy-acc-subdir.json"
   },
   "author": "",
   "license": "ISC"

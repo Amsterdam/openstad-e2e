@@ -128,6 +128,8 @@ const findUrlAndVisit = (cy, siteId, basicAuthUser, basicAuthPassword) => {
                 }
             } : {}
 
+            cy.wait(10000);
+
             cy.visit(siteUrl, options);
 
         })
