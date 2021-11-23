@@ -180,6 +180,8 @@ const createVisitDeleteSite = (templateName) => {
             const newUser = 'user-' + new Date().getTime();
             const newPassword = 'pw-' + new Date().getTime();
 
+            cy.wait(5000);
+
             setBasicAuthPassword(cy, siteId, newUser, newPassword);
 
             findUrlAndVisit(cy, siteId, newUser, newPassword);
