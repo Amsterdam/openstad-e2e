@@ -157,10 +157,11 @@ describe('Submitting arguments', () => {
     cy.contains(timestampedReply)
       .first()
       .siblings('.user')
-      .first()
-      .get(`.delete`)
-      .first()
-      .click();
+      .first().within(() => {
+        cy.get(`.delete`)
+          .first()
+          .click();
+      })
 
     cy.wait(500)
 
