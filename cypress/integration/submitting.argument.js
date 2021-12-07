@@ -134,10 +134,11 @@ describe('Submitting arguments', () => {
     cy.contains(timestampedArgument)
       .first()
       .siblings('.user')
-      .first()
-      .get(`.edit`)
-      .first()
-      .click();
+      .first().within(() => {
+        cy.get(`.edit`)
+        .first()
+        .click();
+      })
 
     cy.get(`.argument-edit-form:visible textarea[name="description"]`)
       .first()
