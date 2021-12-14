@@ -145,7 +145,7 @@ const deleteSite = (cy, siteId, disableProjectEnded = false) => {
         cy.contains('Site settings').click();
         cy.contains('Project has ended').parent().click();
         cy.contains('Save').click();
-        cy.contains('Element updated').should('be.visible');
+        cy.contains('Element updated', { timeout: 10000 }).should('be.visible');
     }
 
     cy.log(`Delete website`)
@@ -157,8 +157,8 @@ const deleteSite = (cy, siteId, disableProjectEnded = false) => {
         .click();
 
     disableProjectEnded ?
-        cy.contains('Er gaat iets mis: Cannot delete an active site - first set the project-has-ended parameter').should('be.visible') :
-        cy.contains('Verwijderd!').should('be.visible')
+        cy.contains('Er gaat iets mis: Cannot delete an active site - first set the project-has-ended parameter', { timeout: 10000 }).should('be.visible') :
+        cy.contains('Verwijderd!', { timeout: 10000 }).should('be.visible')
     
     cy.log('Finito');
 }
