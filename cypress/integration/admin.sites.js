@@ -135,18 +135,31 @@ const findUrlAndVisit = (cy, siteId, basicAuthUser, basicAuthPassword) => {
         })
 }
 
-const deleteSite = (cy, siteId) => {
+const deleteSite = (cy, siteId, disableProjectEnded = false) => {
     const settingsUrl = Cypress.env('adminUrl') + '/admin/site/' + siteId + '/settings';
+    const reactSettingsUrl = Cypress.env('adminUrl') + '/admin/site/' + siteId + '/beta';
+
+    if (!disableProjectEnded) {
+        cy.log(`Set 'Project has ended' true`)
+        cy.visit(reactSettingsUrl);
+        cy.contains('Site settings').click();
+        cy.contains('Project has ended').parent().click();
+        cy.contains('Save').click();
+        cy.contains('Element updated', { timeout: 10000 }).should('be.visible');
+    }
+
+    cy.log(`Delete website`)
     cy.visit(settingsUrl);
-
-    cy.log('Delete site ');
-
     cy.wait(200)
 
     cy.get('button')
-        .contains('Verwijder')
+        .contains('Website verwijderen')
         .click();
 
+    disableProjectEnded ?
+        cy.contains('Er gaat iets mis: Cannot delete an active site - first set the project-has-ended parameter', { timeout: 10000 }).should('be.visible') :
+        cy.contains('Verwijderd!', { timeout: 10000 }).should('be.visible')
+    
     cy.log('Finito');
 }
 
@@ -230,6 +243,10 @@ describe('Filling, validating, submitting, editing, deleting a site', () => {
 
                 findUrlAndVisit(cy, siteId, newUser, newPassword);
 
+                // First check that the site cannot be deleted without setting 'Project has ended' setting
+                deleteSite(cy, siteId, true)
+
+                // Delete site
                 deleteSite(cy, siteId)
             });
 
