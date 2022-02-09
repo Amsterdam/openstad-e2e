@@ -158,7 +158,7 @@ const deleteSite = (cy, siteId, disableProjectEnded = false) => {
 
     disableProjectEnded ?
         cy.contains('Er gaat iets mis: Cannot delete an active site - first set the project-has-ended parameter', { timeout: 10000 }).should('be.visible') :
-        cy.contains('Verwijderd!', { timeout: 10000 }).should('be.visible')
+        cy.contains('Verwijderd!', { timeout: 25000 }).should('be.visible')
     
     cy.log('Finito');
 }
