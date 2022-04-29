@@ -204,7 +204,7 @@ describe('Submitting arguments', () => {
       .first()
       .click();
 
-    cy.wait(1000)
+    cy.wait(4000)
 
     cy.reload()
 
