@@ -6,8 +6,20 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 });
 
 
-const navitageToPageForArguments = (cy) => {
-  // goto site
+const navigateToPageForArguments = (cy, doLogin) => {
+
+  if (doLogin) {
+    // goto site
+    cy.visit(`${Cypress.env('submittingSiteUrl')}`, {
+      auth: {
+        username: Cypress.env('adminBasicAuthUser'),
+        password: Cypress.env('adminBasicAuthPass')
+      }
+    })
+    cy.loginUser(Cypress.env('submittingSiteUrl'));
+  }
+  
+  // goto idea page
   cy.visit(`${Cypress.env('submittingSiteUrl')}/plannen`, {
     auth: {
         username: Cypress.env('adminBasicAuthUser'),
@@ -22,78 +34,60 @@ const navitageToPageForArguments = (cy) => {
 }
 
 const validArgument = 'This is a very valid point, and I would like you to agree with me';
-
 const editedArgument = 'This is an edited argument thats long enough';
-
 const invalidArgument = 'Too short';
 
-const submitArgument = (cy, argument, forArgument = true) => {
-  const formIndex = forArgument ? 0 : 1;
+const submitArgument = (cy, argument, which) => {
 
-  cy.get(`.arguments-cta-box .argument-form textarea`)
-    .eq(formIndex)
+  let form = which;
+  if (typeof which == 'string' || typeof which == 'undefined' ) {
+    const formIndex = which == 'against' ?  1 : 0;
+    form = cy.get(`.osc-reactions`)
+      .eq(formIndex)
+  }
+
+  form.within(() => {
+
+    cy.get('textarea')
     .focus()
     .clear()
     .type(argument);
 
-  cy.wait(1000)
+    cy.wait(1000)
 
-  cy.get(`.arguments-cta-box .argument-form [type="submit"]`)
-    .eq(formIndex)
-    .click();
+    cy.get(`.osc-button-blue`)
+      .click();
 
-  cy.wait(1000)
+    cy.wait(1000)
+
+  })
 
 }
 
 describe('Submitting arguments', () => {
 
-  it('Trying to submit anonymous arguments should get a waning message', () => {
-    navitageToPageForArguments(cy);
+  const timestampedArgument = new Date().getTime() + ' ' + validArgument;
+  const timestampedReply = new Date().getTime() + ' a reply ' + validArgument;
+  const againstArgument = new Date().getTime() + ' against ' + validArgument;
 
-    cy.get('.argument-form textarea')
-      .eq(0)
-      .click();
+  it('Submit, reply-to and delete arguments for', () => {
 
-    cy.wait(1200)
+    cy.log('Login and navigate to a page with arguments');
 
-    //modal should be visible
-    cy.get('#login-required')
-      .should('be.visible');
-  });
-
-  it('Login and navigate to a page with arguments', () => {
-      // goto site
-      cy.visit(`${Cypress.env('submittingSiteUrl')}`, {
-        auth: {
-            username: Cypress.env('adminBasicAuthUser'),
-            password: Cypress.env('adminBasicAuthPass')
-        }
-      })
-    // goto site
-    cy.loginUser(Cypress.env('submittingSiteUrl'));
-
-
-
-
-    navitageToPageForArguments(cy);
+    navigateToPageForArguments(cy, true);
 
     cy.log('Argument form validation throws an error on a short comment')
 
     submitArgument(cy, invalidArgument);
-
-    cy.wait(1000)
-
-    cy.get('.argument-form:eq(0) label.error')
-      .its('length')
-      .should('eq', 1)
+    cy.get('.osc-form-warning')
+      .should('contain', 'De tekst is te kort')
 
     cy.log('Argument for form allows submitting an argument');
-    const timestampedArgument = new Date().getTime() + ' ' + validArgument;
 
+    const timestampedArgument = new Date().getTime() + ' ' + validArgument;
     submitArgument(cy, timestampedArgument);
 
-    cy.wait(500)
+    cy.wait(1000)
 
     // check if argument is on page
     cy.contains(timestampedArgument)
@@ -104,138 +98,114 @@ describe('Submitting arguments', () => {
 
     const timestampedReply = new Date().getTime() + ' a reply ' + validArgument;
 
-
-
-
-    cy.get(`.argument-container .reply`)
-      .first()
-      .click();
-
-    cy.get(`.reply-form:visible textarea[name="description"]`)
-      .first()
-      .clear()
-      .type(timestampedReply);
-
-    cy.get(`.reply-form:visible [type="submit"]`)
+    cy.get(`.osc-reply-button`)
       .first()
       .click();
 
     cy.wait(500)
 
-    // check if edited argument is on page
+    let form = cy.get(`.osc-reply`)
+    submitArgument(cy, timestampedReply, form);
+
+    cy.wait(1000)
+
+    // check if reply argument is on page
     cy.contains(timestampedReply)
       .its('length')
       .should('eq', 1);
 
-    cy.log('Make an edit');
+    cy.log('Edit an argument');
 
     const timestampedEditedArgument = new Date().getTime() + ' a reply ' + editedArgument;
 
-    cy.contains(timestampedArgument)
-      .first()
-      .siblings('.user')
-      .first().within(() => {
-        cy.get(`.edit`)
+    cy.get(`.osc-reaction`).within(() => {
+      cy.get(`.osc-reaction-menu`)
         .first()
         .click();
-      })
 
-    cy.get(`.argument-edit-form:visible textarea[name="description"]`)
-      .first()
-      .clear()
-      .type(timestampedEditedArgument);
+      cy.get(`.osc-reaction-edit`)
+        .first()
+        .click();
 
-    cy.get(`.argument-edit-form:visible [type="submit"]`)
-      .first()
-      .click();
-
+      form = cy.get(`.osc-reaction-description`)
+        .first()
+      submitArgument(cy, timestampedEditedArgument, form);
+    })
+    
     // check if edited argument is on page
     cy.contains(timestampedEditedArgument)
       .its('length')
       .should('eq', 1);
 
-    cy.contains(timestampedReply)
+    cy.log('Delete argument');
+    
+    cy.get(`.osc-reaction-menu`)
       .first()
-      .siblings('.user')
-      .first().within(() => {
-        cy.get(`.delete`)
-          .first()
-          .click();
-      })
+      .click();
 
-    cy.wait(500)
+    cy.get(`.osc-reaction-delete`)
+      .first()
+      .click();
 
-/*
+    cy.wait(1000)
+
     // check if edited argument is deleted
     cy.contains(timestampedReply)
-      .its('length')
-      .should('eq', 0);
-      */
+      .should('not.exist');
 
-    cy.wait(500)
-
+    cy.wait(1000)
 
     cy.log('Argument against form allows submitting an argument');
 
-    const againstArgument = new Date().getTime() + ' against ' + validArgument;
-
-    submitArgument(cy, againstArgument, false);
-
-    cy.wait(400);
-
-    cy.reload();
-
-    cy.url().then((url) => {
-
-      cy.logout(Cypress.env('submittingSiteUrl'));
-      cy.wait(1000)
-      navitageToPageForArguments(cy);
-
-      cy.get('.argument button')
-        .contains('Mee eens')
-        .first()
-        .click();
-
-      //modal should be visible
-      cy.get('#login-required')
-        .should('be.visible');
-
-      cy.get('#login-required a')
-        .contains('Inloggen')
-        .first()
-        .click();
-
-
-      cy.loginUserWithPassword(Cypress.env('defaultUserEmail'), Cypress.env('userPassword'));
-
-      cy.wait(500)
-
-
-      cy.contains(againstArgument)
-        .parents('.argument')
-        .get(`button`)
-        .contains('Mee eens')
-        .click();
-
-      cy.reload()
-
-      cy.log('Delete an argument');
-
-      cy.contains(againstArgument)
-        .parents('.argument')
-        .within(($argument) => {
-          cy.get(`.delete`)
-          .first()
-          .click();
-        })
-
-      cy.reload()
-      // check if edited argument is deleted
-      cy.contains(againstArgument).should('not.exist');
-    })
-
+    submitArgument(cy, againstArgument, 'against');
+    cy.wait(1000);
 
   });
+
+  it('Submit, vote-on and delete arguments against', () => {
+
+    navigateToPageForArguments(cy);
+
+    cy.get('.osc-reaction-like-button')
+      .first()
+      .click();
+
+    cy.wait(1000)
+
+    //modal should be visible
+    cy.get('.osc-modal-popup-content')
+      .last()
+      .should('be.visible');
+
+    cy.get('.osc-modal-popup-buttons button')
+      .contains('Inloggen')
+      .click();
+
+    cy.loginUserWithPassword(Cypress.env('defaultUserEmail'), Cypress.env('userPassword'));
+    cy.wait(1000)
+
+    cy.get('.osc-reaction-like-button')
+      .first()
+      .click();
+
+    cy.reload()
+
+    cy.log('Delete an argument');
+
+    cy.get(`.osc-reaction-menu`)
+      .first()
+      .click();
+
+    cy.get(`.osc-reaction-delete`)
+      .first()
+      .click();
+
+    cy.wait(1000)
+
+    cy.reload()
+    // check if edited argument is deleted
+    cy.contains(againstArgument).should('not.exist');
+  })
 
 
 })
