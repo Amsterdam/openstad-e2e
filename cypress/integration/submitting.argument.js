@@ -171,10 +171,14 @@ describe('Submitting arguments', () => {
       .click();
 
     cy.wait(1000)
-
-    //modal should be visible
+    
+    // modal should be visible - there are two and either one could be visible; this should be fixed in the widgets
+    let modal = cy.get('.osc-modal-popup-content');
     cy.get('.osc-modal-popup-content')
-      .last()
+      .each((elem) => {
+        if (Cypress.dom.isVisible(elem)) modal = elem;
+      })
+    modal
       .should('be.visible');
 
     cy.get('.osc-modal-popup-buttons button')
@@ -203,6 +207,9 @@ describe('Submitting arguments', () => {
     cy.wait(1000)
 
     cy.reload()
+
+    cy.wait(5000)
+
     // check if edited argument is deleted
     cy.contains(againstArgument).should('not.exist');
   })

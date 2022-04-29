@@ -80,6 +80,9 @@ Cypress.Commands.add("logout", (url) => {
 Cypress.Commands.add("login", (authUrl, emailAddress, inboxId, password, twoFactorSecret) => {
 
   if ( Cypress.env('usePasswordLogin')) {
+
+    cy.log('authUrl', authUrl)
+
     cy.visit(`${authUrl}`, {
       auth: {
           username: Cypress.env('adminBasicAuthUser'),
@@ -200,6 +203,7 @@ Cypress.Commands.add("loginAdminPanel", () => {
   let url = Cypress.env('adminUrl') + '/admin/oauth/login';
 
   return cy.login(url, Cypress.env("adminUserEmail"), Cypress.env("adminUserMailSlurpInboxId"), Cypress.env("adminPassword"), Cypress.env("adminTwoFactorSecret"));
+
 });
 
 
