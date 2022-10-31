@@ -73,7 +73,7 @@ describe('Log in and add idea', () => {
     })
 
     //   check entire map is shown
-    cy.get('.openstad-component-ideas-on-map').should('be.visible')
+    cy.get('.osc-ideas-on-map').should('be.visible')
     //   check map-part (right) is shown
     cy.get('.osc-ideas-on-map-info').should('be.visible')
     //   check list-part (left) is shown
